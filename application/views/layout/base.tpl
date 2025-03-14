@@ -25,6 +25,7 @@
 </head>
 
 <body class="">
+       <input type="hidden" id="rootPath" value="{base_url()}">
 
     <div class="startbar d-print-none">
 
@@ -140,7 +141,7 @@
 
 
 {block name=footer} 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="{assets_url()}libs/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="{assets_url()}libs/simplebar/simplebar.min.js"></script>

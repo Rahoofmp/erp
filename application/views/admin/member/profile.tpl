@@ -232,16 +232,22 @@
 </div>  
 {/block}
 
-{block name="header"}
+
+{block name="head"}
+
+
+
+
 
 <link href="{assets_url('plugins/autocomplete/jquery-ui.min.css')}" rel="stylesheet" />
 <link href="{assets_url('plugins/autocomplete/style.css')}" rel="stylesheet" /> 
+
 {/block}
 
 {block name="footer"}
 
-<script src="{assets_url('plugins/autocomplete/filter.js')}"></script>
 <script src="{assets_url('plugins/autocomplete/jquery-ui.min.js')}"></script>
+<script src="{assets_url('plugins/autocomplete/filter.js')}"></script>
 
 <script type="text/javascript">
 
@@ -251,24 +257,6 @@
 	});
 </script> 
 
-<script>
-	document.getElementById('inputGroupFile02').addEventListener('change', function(event) {
-		const file = event.target.files[0];
-		if (file) {
-			const reader = new FileReader();
-			reader.onload = function(e) {
-				document.getElementById('previewImage').src = e.target.result;
-				document.getElementById('removeButton').classList.remove('d-none');
-			};
-			reader.readAsDataURL(file);
-		}
-	});
 
-	document.getElementById('removeButton').addEventListener('click', function() {
-		document.getElementById('inputGroupFile02').value = "";
-		document.getElementById('previewImage').src = "{assets_url('images/profile_pic/')}{$user_details['user_photo']}";
-		this.classList.add('d-none');
-	});
-</script>
 
 {/block}
