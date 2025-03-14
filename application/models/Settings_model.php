@@ -92,10 +92,10 @@ class Settings_model extends Base_model {
 
         $query = $this->db->get();
         foreach($query->result_array() as $row)
-           $details[]=$row;
-       return $details;
-   }
-   public function getDepartmentID($department_name='') {
+         $details[]=$row;
+     return $details;
+ }
+ public function getDepartmentID($department_name='') {
     $id = array();
     $this->db->select('dep_id');
     $this->db->from('department');
@@ -345,7 +345,7 @@ public function getAllProductsAjax( $search_arr =[],$count = 0)
         $row['index'] =$search_arr['start']+$i;
         $row['enc_product_id']=$this->encrypt_decrypt('encrypt',$row['id']);
         $row['category_name']=$this->Base_model->getCategoryName($row['category']);
-       
+
         // $row['created_date'] = date('Y-m-d',strtotime($row['created_date']));
         $details[] = $row;
         $i++;
@@ -557,6 +557,22 @@ public function addNewItem($post_arr){
     return $result;
 
 } 
+
+
+public function getAllitemDetails($id) 
+{
+    $vehicle_details = array(); 
+    $this->db->select('*');
+    $this->db->from("party_details");
+    $this->db->where('id',$id);
+    $query = $this->db->get();
+    foreach ($query->result_array() as $row) 
+    {
+        $row['vehicle_name']=$this->Base_model->getVehicleName($row['vehicle_id']);
+        $vehicle_details=$row;
+    }
+    return $vehicle_details;
+}
 
 
 

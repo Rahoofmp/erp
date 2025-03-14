@@ -41,7 +41,7 @@
 						</div> 
 					</div>
 
-					<div class="form-actions right"> 
+					<div class="form-actions right mt-2"> 
 						<button type="submit" class="btn btn-primary" name="update" value="website">
 							<i class="fa fa-check-square-o"></i> {lang('button_update')}
 						</button>

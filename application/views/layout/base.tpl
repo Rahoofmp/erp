@@ -66,26 +66,26 @@
                 <ul class="topbar-item list-unstyled d-inline-flex align-items-center mb-0">
 
 
-                    <li class="topbar-item">
+                  <!--   <li class="topbar-item">
                         <a class="nav-link nav-icon" href="javascript:void(0);" id="light-dark-mode">
                             <i class="icofont-moon dark-mode"></i>
                             <i class="icofont-sun light-mode"></i>
                         </a>                    
-                    </li>
+                    </li> -->
 
-                    <li class="dropdown topbar-item">
+                 <!--    <li class="dropdown topbar-item">
                         <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
                         aria-haspopup="false" aria-expanded="false">
                         <i class="icofont-bell-alt"></i>
                         <span class="alert-badge"></span>
                     </a>
 
-                </li>
+                </li> -->
 
                 <li class="dropdown topbar-item">
                     <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
                     aria-haspopup="false" aria-expanded="false">
-                    <img src="{assets_url()}images/users/{$user_details['user_photo']}" alt="" class="thumb-lg rounded-circle">
+                    <img src="{assets_url()}images/profile_pic/{$user_details['user_photo']}" alt="" class="thumb-lg rounded-circle">
                 </a>
                 <div class="dropdown-menu dropdown-menu-end py-0">
                   

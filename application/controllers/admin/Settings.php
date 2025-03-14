@@ -8,6 +8,33 @@ class Settings extends Base_Controller {
 	}
 
 
+	function website_profile()
+	{       
+		$site_info = $this->Settings_model->getCompanyInformation();
+		if ($this->input->post('update') && $this->validate_website_profile()) {
+			$site_info = $this->input->post();  
+
+			$update_company_info = $this->Settings_model->updateWebisteInfo($site_info);
+
+			if ( $update_company_info ) { 
+				$this->Base_model->insertIntoActivityHistory(log_user_id(), log_user_id(),'update_company_settings', serialize($site_info) );
+				$msg = lang('success_site_updated');
+				$this->redirect($msg, "settings/website-profile", TRUE);
+
+			} else {
+				$msg = lang('error_on_site_updation');
+				$this->redirect($msg, "settings/website-profile", FALSE);
+			}
+		}
+
+		$data['site_info'] = $site_info;
+
+		$data['title'] = lang('website_profile'); 
+		$this->loadView($data);
+	}
+
+
+
 	function add_vehicle($enc_id='')
 	{
 
@@ -207,7 +234,7 @@ class Settings extends Base_Controller {
 		if ($enc_id) {
 			$id=$this->Base_model->encrypt_decrypt('decrypt',$enc_id);
 
-			$data['vehicle_details']=$this->Settings_model->getAllVehicleDetails($id);
+			$data['item_details']=$this->Settings_model->getAllVehicleDetails($id);
 			$data['enc_id']=$enc_id;
 		}
 
@@ -271,7 +298,7 @@ class Settings extends Base_Controller {
 				$search_arr = [];
 			}elseif( $this->input->post('submit') == 'filter'){
 				$post_arr = $this->input->post();
-			
+				
 				
 				if(element('product_id',$post_arr)){
 					$search_arr['name'] =$this->Base_model->getProductName($post_arr['product_id']);
@@ -292,7 +319,7 @@ class Settings extends Base_Controller {
 		$data['search_arr'] = $search_arr; 
 		$data['details'] = $details;
 
-	
+		
 		$data['title'] = 'List Vehicles'; 
 		$this->loadView($data);
 	}
@@ -304,7 +331,7 @@ class Settings extends Base_Controller {
 			$count_without_filter = $this->Settings_model->getPartyCount();
 			$count_with_filter = $this->Settings_model->getAllProductsAjax($post_arr, 1);
 			$details = $this->Settings_model->getAllProductsAjax( $post_arr,'');
-		
+			
 			$response = array(
 				"draw" => intval($draw),
 				"iTotalRecords" => $count_without_filter,
@@ -459,6 +486,14 @@ class Settings extends Base_Controller {
 
 
 
+	protected function validate_website_profile() {
+		$this->form_validation->set_rules('website_name', lang('website_name'), 'trim|required');
+		$this->form_validation->set_rules('address', lang('address'), 'trim|required');
+		$this->form_validation->set_rules('email', lang('email'), 'trim|required|valid_email');
+		$this->form_validation->set_rules('phone', lang('phone'), 'trim|required'); 
+		$validation_result =  $this->form_validation->run();
+		return $validation_result;
+	}
 
 
 	public function validate_add_vehicle()
