@@ -24,9 +24,13 @@ document.addEventListener("DOMContentLoaded", function() {
     if (toastEl) {
         var toast = new bootstrap.Toast(toastEl);
         toast.show(); 
+        toastEl.addEventListener('hidden.bs.toast', function () {
+            toastEl.classList.remove('mb-1');
+        });
     }
 });
 </script>
+
 {/if}
 
 
