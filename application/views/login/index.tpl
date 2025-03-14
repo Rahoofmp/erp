@@ -2,45 +2,93 @@
 
 {block name="body"} 
 
-<div class="row">
-    <div class="col-lg-4 col-md-6 col-sm-8 ml-auto mr-auto">
-        {form_open('', 'class="form form-horizontal form-simple"')}
-        <div class="card card-login card-hidden">
-            <div class="card-header card-header-rose text-center">
-                <h4 class="card-title">{lang('button_login')}</h4>
-            </div>
-            <div class="card-body ">
-                <span class="bmd-form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="material-icons">account_box</i>
-                            </span>
-                        </div>
-                        <input type="text" class="form-control form-control-lg required" id="user-name" name="user_name" placeholder="{lang('username')}" required autocomplete="off">
-                    </div>
-                    {form_error('user_name')}
-                </span>
-                <span class="bmd-form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="material-icons">lock</i>
-                            </span>
-                        </div>
-                        <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="{lang('password')}" required >
-                    </div>
-                    <p class="text-right"><a href="{base_url('forgot')}"> Forgot password</a></p>
-                    {form_error('password')} 
-                </span>
-            </div>
-            <div class="card-footer justify-content-center"> 
-                <button type="submit" class="btn btn-rose" name="login" value="login"><i class="fa fa-unlock"></i> {lang('button_login')}</button>
-            </div>
-   
+
+<div class="card">
+    <div class="card-body p-0 bg-black auth-header-box rounded-top">
+        <div class="text-center p-3">
+            <a href="index.html" class="logo logo-admin">
+                <img src="{assets_url()}images/logo-sm.png" height="50" alt="logo" class="auth-logo">
+            </a>
+            <h4 class="mt-3 mb-1 fw-semibold text-white fs-18">Let's Get Started Rizz</h4>   
+            <p class="text-muted fw-medium mb-0">Sign in to continue to Rizz.</p>  
         </div>
-        {form_close()}
     </div>
-</div>
+    <div class="card-body pt-0">                                    
+
+       {form_open('', 'class="my-4"')}          
+       <div class="form-group mb-2">
+        <label class="form-label" for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="user_name" placeholder="{lang('username')}" required autocomplete="off" placeholder="Enter username">                               
+    </div><!--end form-group--> 
+
+    <div class="form-group position-relative">
+        <label class="form-label" for="userpassword">Password</label>                                            
+        <div class="input-group">
+
+           
+            <input type="password" class="form-control" name="password" placeholder="{lang('password')}" required id="userpassword" placeholder="Enter password">                            
+            <button type="button" class="btn btn-outline-secondary toggle-password input-group-text" id="togglePassword">
+                <i class="fas fa-eye"></i>
+            </button>
+        </div>
+    </div><!--end form-group--> 
+
+    <div class="form-group row mt-3">
+        <div class="col-sm-6">
+            <div class="form-check form-switch form-switch-success">
+                <input class="form-check-input" type="checkbox" id="customSwitchSuccess">
+                <label class="form-check-label" for="customSwitchSuccess">Remember me</label>
+            </div>
+        </div><!--end col--> 
+        <div class="col-sm-6 text-end">
+            <a href="{base_url('forgot')}" class="text-muted font-13"><i class="dripicons-lock"></i> Forgot password?</a>                                    
+        </div><!--end col--> 
+    </div><!--end form-group--> 
+
+    <div class="form-group mb-0 row">
+        <div class="col-12">
+            <div class="d-grid mt-3">
+                <button class="btn btn-primary" type="submit" name="login" value="login">Log In <i class="fas fa-sign-in-alt ms-1"></i></button>
+            </div>
+        </div><!--end col--> 
+    </div> <!--end form-group-->                           
+    {form_close()}
+ <!--        <div class="text-center  mb-2">
+            <p class="text-muted">Don't have an account ?  <a href="auth-register.html" class="text-primary ms-2">Free Resister</a></p>
+            <h6 class="px-3 d-inline-block">Or Login With</h6>
+        </div> -->
+       <!--  <div class="d-flex justify-content-center">
+            <a href="#" class="d-flex justify-content-center align-items-center thumb-md bg-blue-subtle text-blue rounded-circle me-2">
+                <i class="fab fa-facebook align-self-center"></i>
+            </a>
+            <a href="#" class="d-flex justify-content-center align-items-center thumb-md bg-info-subtle text-info rounded-circle me-2">
+                <i class="fab fa-twitter align-self-center"></i>
+            </a>
+            <a href="#" class="d-flex justify-content-center align-items-center thumb-md bg-danger-subtle text-danger rounded-circle">
+                <i class="fab fa-google align-self-center"></i>
+            </a>
+        </div> -->
+    </div><!--end card-body-->
+</div><!--end card-->
+
+
+{/block}
+{block name=footer} 
+
+<script>
+document.getElementById('togglePassword').addEventListener('click', function() {
+    var passwordField = document.getElementById('userpassword');
+    var icon = this.querySelector('i');
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        passwordField.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+});
+</script>
 
 {/block}

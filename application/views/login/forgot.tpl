@@ -1,44 +1,41 @@
 {extends file="login/layout.tpl"}
 
 {block name="body"} 
-
-<div class="row">
-    <div class="col-lg-4 col-md-6 col-sm-8 ml-auto mr-auto">
-        {form_open('', 'class="form form-horizontal form-simple"')}
-        <div class="card card-login card-hidden">
-            <div class="card-header card-header-rose text-center">
-                <h4 class="card-title">{lang('button_forgot')}</h4>
-            </div>
-            <div class="card-body ">
-                <span class="bmd-form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="material-icons">account_box</i>
-                            </span>
-                        </div>
-                        <input type="text" class="form-control form-control-lg required" id="user-name" name="user_name" placeholder="{lang('username')}" required autocomplete="off">
-                    </div>
-                    {form_error('user_name')}
-                </span>
-                <span class="bmd-form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="material-icons">email</i>
-                            </span>
-                        </div>
-                        <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="{lang('email')}" required autocomplete="off">
-                    </div>
-                    {form_error('email')}
-                </span>
-            </div>
-            <div class="card-footer justify-content-center"> 
-                <button type="submit" class="btn btn-rose btn-link btn-lg" name="forgot" value="forgot"><i class="fa fa-unlock"></i> {lang('button_forgot')}</button> 
-            </div>
+<div class="card">
+    <div class="card-body p-0 bg-black auth-header-box rounded-top">
+        <div class="text-center p-3">
+            <a href="index.html" class="logo logo-admin">
+                <img src="{assets_url()}images/logo-sm.png" height="50" alt="logo" class="auth-logo">
+            </a>
+            <h4 class="mt-3 mb-1 fw-semibold text-white fs-18">Reset Password</h4>   
+            <p class="text-muted fw-medium mb-0">Enter your Email and instructions will be sent to you!</p>  
         </div>
-        {form_close()}
     </div>
-</div>
+    <div class="card-body pt-0">                                    
+        {form_open('', 'class="my-4"')}         
+        <div class="form-group mb-2">
+            <label class="form-label" for="username">User Name</label>
+            <input type="text" class="form-control" required id="user-name" name="user_name" placeholder="{lang('username')}" required autocomplete="off">                               
+        </div><!--end form-group-->
+        <div class="form-group mb-2">
+            <label class="form-label" for="username">Email</label>
+            <input type="text" class="form-control" id="userEmail" name="email" required="" autocomplete="off" placeholder="Enter Email Address">                               
+        </div><!--end form-group-->             
+
+        <div class="form-group mb-0 row">
+            <div class="col-12">
+                <div class="d-grid mt-3">
+                    <button class="btn btn-primary" type="submit" name="forgot" value="forgot">Reset <i class="fas fa-sign-in-alt ms-1"></i></button>
+                </div>
+            </div><!--end col--> 
+        </div> <!--end form-group-->                           
+        {form_close()}
+        <div class="text-center  mb-2">
+            <p class="text-muted">Remember It ?  <a href="{base_url('login')}" class="text-primary ms-2">Sign in here</a></p>
+        </div>
+    </div><!--end card-body-->
+</div><!--end card-->
+
+
 
 {/block}
