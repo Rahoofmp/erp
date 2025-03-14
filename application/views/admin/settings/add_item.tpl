@@ -32,7 +32,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtVnumber" class="col-lg-3 col-form-label">Code/Barcode :</label>
 											<div class="col-lg-9">
-												<input type="text" id="bar_code" autocomplete="off" class="form-control" name="bar_code" value="{$item_details['bar_code']}">
+												<input type="text" id="bar_code" autocomplete="off" class="form-control" name="bar_code" value="{$item_details['barcode']}">
 												{form_error('bar_code')}
 											</div>
 										</div>
@@ -69,12 +69,13 @@
 												<select id="category" name="category" class="form-control">
 													<option value="">--Select Category--</option>
 													{foreach $category_details as $v}
-													<option value="{$v.id}">{$v.category_name}</option>
+													<option value="{$v.id}" {if $v.id == $item_details['category']}selected{/if}>{$v.category_name}</option>
 													{/foreach}
 												</select> 
 											</div>
 										</div>
 									</div>
+
 
 									<div class="col-md-6">
 										<div class="form-group row mb-2">
@@ -110,7 +111,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtEmail" class="col-lg-3 col-form-label">Tax Category :</label>
 											<div class="col-lg-9">
-												<input type="number" id="tax_cat"  class="form-control" name="tax_cat" value="{$item_details['tax_cat']}" readonly>
+												<input type="number" id="tax_cat"  class="form-control" name="tax_cat" value="{$item_details['tax']}" readonly>
 											</div>
 										</div>
 									</div>

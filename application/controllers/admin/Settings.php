@@ -234,7 +234,8 @@ class Settings extends Base_Controller {
 		if ($enc_id) {
 			$id=$this->Base_model->encrypt_decrypt('decrypt',$enc_id);
 
-			$data['item_details']=$this->Settings_model->getAllVehicleDetails($id);
+
+			$data['item_details']=$this->Settings_model->getAllitemDetails($id);
 			$data['enc_id']=$enc_id;
 		}
 
@@ -251,19 +252,16 @@ class Settings extends Base_Controller {
 
 		}
 
-		if ($this->input->post('update_vehicle') && $this->validate_edit_vehicle()) {
+		if ($this->input->post('update_item') && $this->validate_update_item()) {
 
 			$post_arr=$this->input->post();
-			
-			$update=$this->Settings_model->updateVehicleDetails($post_arr,$id);
-
+			$update=$this->Settings_model->updateItem($post_arr,$id);
 			if ($update) {
-				$this->redirect('Vehicle Updated Successfully','settings/list-vehicles',TRUE);
+				$this->redirect('Item Updated Successfully','settings/list-items',TRUE);
 			}
 			else{
-				$this->redirect('Error on updating','settings/add-vehicle/'.$enc_id,False);
+				$this->redirect('Error on updating','settings/add-item/'.$enc_id,False);
 			}
-
 		} 
 
 		$data['category_details']=$this->Settings_model->getAllCategoryDetails();
@@ -328,7 +326,7 @@ class Settings extends Base_Controller {
 		if ($this->input->is_ajax_request()) {
 			$draw = $this->input->post('draw');
 			$post_arr = $this->input->post();
-			$count_without_filter = $this->Settings_model->getPartyCount();
+			$count_without_filter = $this->Settings_model->getItemCount();
 			$count_with_filter = $this->Settings_model->getAllProductsAjax($post_arr, 1);
 			$details = $this->Settings_model->getAllProductsAjax( $post_arr,'');
 			
@@ -547,8 +545,22 @@ class Settings extends Base_Controller {
 		$this->form_validation->set_rules('stock','Stock','trim|required');
 		$this->form_validation->set_rules('as_date','Date','trim|required');
 		$result = $this->form_validation->run();
+		return $result;
+	}
 
-
+	public function validate_update_item()
+	{
+		$this->form_validation->set_rules('bar_code','Bar Code','trim|required');
+		$this->form_validation->set_rules('name','Product Name','trim|required');
+		$this->form_validation->set_rules('type','Open Balance','trim|required');
+		$this->form_validation->set_rules('category','Category','trim|required');
+		$this->form_validation->set_rules('purchase_rate','Purchase Rate','trim|required');
+		$this->form_validation->set_rules('sale_rate','Sale Rate','trim|required');
+		$this->form_validation->set_rules('mrp','MRP','trim|required');
+		$this->form_validation->set_rules('tax_cat','Tax Category','trim|required');
+		$this->form_validation->set_rules('stock','Stock','trim|required');
+		$this->form_validation->set_rules('as_date','Date','trim|required');
+		$result = $this->form_validation->run();
 		return $result;
 	}
 

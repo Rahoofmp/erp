@@ -92,10 +92,10 @@ class Settings_model extends Base_model {
 
         $query = $this->db->get();
         foreach($query->result_array() as $row)
-         $details[]=$row;
-     return $details;
- }
- public function getDepartmentID($department_name='') {
+           $details[]=$row;
+       return $details;
+   }
+   public function getDepartmentID($department_name='') {
     $id = array();
     $this->db->select('dep_id');
     $this->db->from('department');
@@ -558,21 +558,42 @@ public function addNewItem($post_arr){
 
 } 
 
-
 public function getAllitemDetails($id) 
 {
     $vehicle_details = array(); 
     $this->db->select('*');
-    $this->db->from("party_details");
+    $this->db->from("products");
     $this->db->where('id',$id);
     $query = $this->db->get();
     foreach ($query->result_array() as $row) 
     {
-        $row['vehicle_name']=$this->Base_model->getVehicleName($row['vehicle_id']);
+        $row['category_name']=$this->Base_model->getCategoryName($row['category']);
         $vehicle_details=$row;
     }
     return $vehicle_details;
 }
+
+
+public function updateItem($post_arr,$id){
+
+
+    $this->db->set('barcode',$post_arr['bar_code']);
+    $this->db->set('name',$post_arr['name']);
+    $this->db->set('type',$post_arr['type']);
+    $this->db->set('category',$post_arr['category']);
+    $this->db->set('purchase_rate',$post_arr['purchase_rate']);
+    $this->db->set('sale_rate',$post_arr['sale_rate']);
+    $this->db->set('mrp',$post_arr['mrp']);
+    $this->db->set('tax',$post_arr['tax_cat']);
+    $this->db->set('stock',$post_arr['stock']);
+    $this->db->set('as_date',$post_arr['as_date']);
+    $this->db->set('status',$post_arr['status']);
+    $this->db->where('id',$id);
+    $result = $this->db->update('products');
+    return $result;
+
+} 
+
 
 
 
