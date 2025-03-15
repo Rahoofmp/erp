@@ -86,7 +86,7 @@ class Truncate_model extends Base_Model {
 		{
 			$this->db->truncate("activity");
 		}   
-		    
+		
 
 		if(in_array($dbprefix."delivery_notes", $table_list))
 		{
@@ -112,12 +112,12 @@ class Truncate_model extends Base_Model {
 		{
 			$this->db->truncate("events");
 		}   
-		    
+		
 		if(in_array($dbprefix."internal_mail_details", $table_list))
 		{
 			$this->db->truncate("internal_mail_details");
 		}
- 
+		
 		if(in_array($dbprefix."mail_contents", $table_list))
 		{
 			$this->db->truncate("mail_contents");
@@ -132,18 +132,23 @@ class Truncate_model extends Base_Model {
 		{
 			$this->db->truncate("news");
 		}
-		 
-		 
+		
+		
 		if(in_array($dbprefix."package_items", $table_list))
 		{
 			$this->db->truncate("package_items");
 		}
-		 
+
+		if(in_array($dbprefix."job_details", $table_list))
+		{
+			$this->db->truncate("job_details");
+		}
+		
 		if(in_array($dbprefix."password_reset_table", $table_list))
 		{
 			$this->db->truncate("password_reset_table");
 		}
-		 
+		
 		if(in_array($dbprefix."project", $table_list))
 		{
 			$this->db->truncate("project");
@@ -182,7 +187,7 @@ class Truncate_model extends Base_Model {
 		{
 			$this->db->truncate("department_jobs");
 		}   
- 
+		
 		if(in_array($dbprefix."job_orders", $table_list))
 		{
 			$this->db->truncate("job_orders");
@@ -191,7 +196,7 @@ class Truncate_model extends Base_Model {
 		{
 			$this->db->truncate("products");
 		}
-		 if(in_array($dbprefix."category", $table_list))
+		if(in_array($dbprefix."category", $table_list))
 		{
 			$this->db->truncate("category");
 		} 
@@ -296,12 +301,12 @@ class Truncate_model extends Base_Model {
 		{
 			$this->db->truncate("department_jobs");
 		}   
- 
+		
 		if(in_array($dbprefix."job_orders", $table_list))
 		{
 			$this->db->truncate("job_orders");
 		}   
- 
+		
 		
 		$return_arr['status'] = TRUE;
 		$return_arr['message'] = "Truncate done successfully...";

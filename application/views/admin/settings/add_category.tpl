@@ -112,7 +112,7 @@
 								<th>#</th> 
 								<th>Name</th>
 								<th>{lang('Code')}</th>
-								<th>Tax</th>
+								<th>Tax (%)</th>
 								<th>Created Date</th>  
 								<th>{lang('status')}</th>
 								<th class="text-center">{lang('action')}</th>   

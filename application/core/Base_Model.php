@@ -2259,14 +2259,14 @@ public function getPartyAuto($term='') {
     $this->db->from('party_details');
     if ($term) {
 
-       $this->db->where("name LIKE '$term%'");
+     $this->db->where("name LIKE '$term%'");
 
-   }
-   $this->db->limit(10);
-   $this->db->order_by('id','ASC');
-   $res = $this->db->get();
+ }
+ $this->db->limit(10);
+ $this->db->order_by('id','ASC');
+ $res = $this->db->get();
 
-   foreach($res->result_array() as $row) {
+ foreach($res->result_array() as $row) {
     $output[] = ['id'=>$row['id'], 
 
     'text' =>$row['name']  
@@ -2284,14 +2284,14 @@ public function getBarcodeAuto($term='') {
     $this->db->from('products');
     if ($term) {
 
-       $this->db->where("barcode LIKE '$term%'");
+     $this->db->where("barcode LIKE '$term%'");
 
-   }
-   $this->db->limit(10);
-   $this->db->order_by('id','ASC');
-   $res = $this->db->get();
+ }
+ $this->db->limit(10);
+ $this->db->order_by('id','ASC');
+ $res = $this->db->get();
 
-   foreach($res->result_array() as $row) {
+ foreach($res->result_array() as $row) {
     $output[] = ['id'=>$row['id'], 
 
     'text' =>$row['barcode']  
@@ -2313,6 +2313,31 @@ public function getItemAuto($term='') {
     }
     $this->db->limit(10);
     $this->db->order_by('id','ASC');
+    $res = $this->db->get();
+
+    foreach($res->result_array() as $row) {
+        $output[] = ['id'=>$row['id'], 
+
+        'text' =>$row['name']  
+    ];
+}
+
+return $output;
+}
+
+public function getActiveItemAuto($term='') {
+
+    $output = [];
+    $this->db->select('id,name');
+    $this->db->from('products');
+    if ($term) {
+
+        $this->db->where("name LIKE '$term%'");
+
+    }
+    $this->db->limit(10);
+    $this->db->order_by('id','ASC');
+    $this->db->where('stock > ','0');
     $res = $this->db->get();
 
     foreach($res->result_array() as $row) {
