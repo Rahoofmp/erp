@@ -137,6 +137,7 @@
 									</div>
 								</div>{/if}
 
+							
 								<div class="row mt-3">
 									<div class="col-md-6">
 										<h4 class="title">Change Profile Photo</h4>
@@ -256,6 +257,26 @@
 		md.initFormExtendedDatetimepickers(); 	
 	});
 </script> 
+
+<script>
+	document.getElementById('inputGroupFile02').addEventListener('change', function(event) {
+		const file = event.target.files[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = function(e) {
+				document.getElementById('previewImage').src = e.target.result;
+				document.getElementById('removeButton').classList.remove('d-none');
+			};
+			reader.readAsDataURL(file);
+		}
+	});
+
+	document.getElementById('removeButton').addEventListener('click', function() {
+		document.getElementById('inputGroupFile02').value = "";
+		document.getElementById('previewImage').src = "{assets_url('images/profile_pic/')}{$user_details['user_photo']}";
+		this.classList.add('d-none');
+	});
+</script>
 
 
 
