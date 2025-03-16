@@ -23,41 +23,22 @@ class Jobs extends Base_Controller {
 			}elseif( $this->input->post('submit') == 'filter'){
 				$post_arr = $this->input->post();
 
-				if(!element('customer_username',$post_arr)){
-					$post_arr['customer_username'] = '';
+
+				if(element('product_id',$post_arr)){
+					$search_arr['product_name'] =$this->Base_model->getProductName($post_arr['product_id']);
+					$search_arr['product_id'] = $post_arr['product_id'];
 				} 
 
-				if(element('source_id',$post_arr)){
-					$search_arr['source_user'] =$this->Base_model->getSourceName($post_arr['source_id']);
-				} 
-
-				if(element('country',$post_arr)){
-					$search_arr['country_name'] =$this->Base_model->getCountryName($post_arr['country']);
+				if(element('category',$post_arr)){
+					$search_arr['category_name'] =$this->Base_model->getCategoryName($post_arr['category']);
+					$search_arr['category'] = $post_arr['category'];
 
 				}
+				$search_arr['status'] = $post_arr['status'];
 
-				if(!element('source_id',$post_arr)){
-					$post_arr['source_id'] = '';
-				}
-
-				if(!element('salesman_id',$post_arr)){
-					$post_arr['salesman_id'] = '';
-				}else{
-					$post_arr['salesman_name'] = $this->Base_model->getUserName($post_arr['salesman_id']);
-					$search_arr['salesman_name'] = $post_arr['salesman_name'];
-
-				}
-				
-				// $search_arr['name'] = $post_arr['name'];
-				$search_arr['enquiry'] = $post_arr['enquiry'];
-				$search_arr['source_id'] = $post_arr['source_id'];
-				$search_arr['customer_username'] = $post_arr['customer_username'];
-				$search_arr['salesman_id'] = $post_arr['salesman_id'];
-				$search_arr['country'] = $post_arr['country'];
 
 			}
-			// $details = $this->Customer_model->getAllCustomers( $search_arr );
-
+			
 		}
 
 
@@ -68,20 +49,16 @@ class Jobs extends Base_Controller {
 		$data['title'] = lang('customers_list'); 
 		$this->loadView($data);
 	}
-	public function get_customer_list_ajax() {
+	public function get_assigned_item_ajax() {
 		if ($this->input->is_ajax_request()) {
 			$draw = $this->input->post('draw');
 			$post_arr = $this->input->post();
-			$count_without_filter = $this->Customer_model->getOrderCount();
-			$count_with_filter = $this->Customer_model->getAllCustomersAjax($post_arr, 1);
+
+			$count_without_filter = $this->Jobs_model->getItemsCount(log_user_id());
+			$count_with_filter = $this->Jobs_model->getAllItemsAjax($post_arr, 1);
 			$post_arr['salesman_id'] = log_user_id();
 
-			$details = $this->Customer_model->getAllCustomersAjax( $post_arr,'');
-
-
-
-			// echo $this->db->last_query();
-			// die();
+			$details = $this->Jobs_model->getAllItemsAjax( $post_arr,'');
 			$response = array(
 				"draw" => intval($draw),
 				"iTotalRecords" => $count_without_filter,

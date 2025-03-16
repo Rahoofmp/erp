@@ -32,6 +32,8 @@ class Salesman extends Base_Controller {
 			
 
 			$post_arr=$this->input->post();
+
+	
 			
 			if (!isset($post_arr['products']) || empty($post_arr['products']) || !isset($post_arr['products'][0]['product_id']) ||empty($post_arr['products'][0]['product_id'])
 		) {
@@ -44,19 +46,10 @@ class Salesman extends Base_Controller {
 			}
 		}
 
-		$product_ids = array_column($post_arr['products'], 'product_id');
-		$category_ids = array_column($post_arr['products'], 'category_id');
-		$quantities = array_column($post_arr['products'], 'quantity');
+	
 
 
-		$product_ids_str = implode(',', $product_ids);
-		$category_ids_str = implode(',', $category_ids);
-		$quantities_str = implode(',', $quantities);
-
-
-
-
-		$ins=$this->Salesman_model->addJobDetails($post_arr['vehicle_id'],$post_arr['sales_man_id'],$category_ids_str,$product_ids_str,$quantities_str);
+		$ins=$this->Salesman_model->addJobDetails($post_arr);
 
 		if($ins){
 

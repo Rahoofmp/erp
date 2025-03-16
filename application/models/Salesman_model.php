@@ -8,20 +8,30 @@ class Salesman_model extends Base_model {
     }
 
 
-    public function addJobDetails($vehicle_id,$salesman_id,$categories,$products,$quantities){
-
+    public function addJobDetails($post_arr) {
+        $ins=false;
         $submit_date = date('Y-m-d H:i:s');
-        $this->db->set('vehicle_id',$vehicle_id);
-        $this->db->set('salesman_id',$salesman_id);
-        $this->db->set('categories',$categories);
-        $this->db->set('products',$products);
-        $this->db->set('quantities',$quantities);
-        $this->db->set('saled_quantities',$quantities);
-        $this->db->set('created_date',$submit_date);
-        $this->db->set('status','active');
-        $result = $this->db->insert('job_details');
-        return $result;
-    }  
+        $vehicle_id = $post_arr['vehicle_id'];
+        $salesman_id = $post_arr['sales_man_id'];
+
+        if (!empty($post_arr['products'])) {
+            foreach ($post_arr['products'] as $product) {
+                $this->db->set('vehicle_id', $vehicle_id);
+                $this->db->set('salesman_id', $salesman_id);
+                $this->db->set('categories', $product['category_id']);
+                $this->db->set('products', $product['product_id']);
+                $this->db->set('quantities', $product['quantity']);
+                $this->db->set('saled_quantities', $product['quantity']);
+                $this->db->set('created_date', $submit_date);
+                $this->db->set('status', 'active');
+                $ins=$this->db->insert('job_details');
+            }
+        }
+
+
+        return $ins; 
+    }
+
 
 
     public function getSalesmanByvehicle($vehicle_id) 

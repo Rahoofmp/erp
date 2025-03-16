@@ -2399,9 +2399,58 @@ public function getProductName($id)
 }
 
 
+public function getAssignedItemAuto($term = '') {
+    $output = [];
+    $this->db->select('id, products');
+    $this->db->from('job_details');
+    $this->db->where('salesman_id', log_user_id());
+    if ($term) {
+        $this->db->like("id", $term, "after"); 
+    }
+    $this->db->limit(10);
+    $this->db->order_by('id', 'ASC');
+    $res = $this->db->get();
+    foreach ($res->result_array() as $row) {
+        $product_ids = explode(',', $row['products']); 
+        $products = [];
+        foreach ($product_ids as $product_id) {
+            $product_name = $this->getProductName($product_id);
+            $products[] = ['id' => $product_id, 'text' => $product_name]; 
+        }
 
+        $output = array_merge($output, $products);
+    }
+    return $output; 
+}
 
+public function getAssignedCategoryAuto($term = '') {
+    $output = [];
+    $this->db->select('id, categories');
+    $this->db->from('job_details');
+    $this->db->where('salesman_id', log_user_id());
 
+    if ($term) {
+        $this->db->like("id", $term, "after");
+    }
+
+    $this->db->limit(10);
+    $this->db->order_by('id', 'ASC');
+    $res = $this->db->get();
+
+    foreach ($res->result_array() as $row) {
+        $category_ids = explode(',', $row['categories']);
+
+        $categories = [];
+        foreach ($category_ids as $category_id) {
+            $category_name = $this->getCategoryName($category_id);
+            $categories[] = ['id' => $category_id, 'text' => $category_name];
+        }
+
+        $output = array_merge($output, $categories);
+    }
+
+    return $output;
+}
 
 
 

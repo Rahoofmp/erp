@@ -204,6 +204,15 @@ class Truncate_model extends Base_Model {
 		{
 			$this->db->truncate("vehicles");
 		}   
+
+		if(in_array($dbprefix."party_details", $table_list))
+		{
+			$this->db->truncate("party_details");
+		}   
+		if(in_array($dbprefix."job_details", $table_list))
+		{
+			$this->db->truncate("job_details");
+		}   
 		//V2 END
 
 

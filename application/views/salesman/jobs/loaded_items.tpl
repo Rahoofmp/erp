@@ -50,31 +50,23 @@
 
 							<div class="col-md-3">
 								<div class="form-group">
-									<select id="source" name="product_id" class="item_name_ajax form-control select2">
+									<select id="products" name="product_id" class="item_name_ajax form-control select2">
 										{if $search_arr['product_id']}
-										<option value="{$search_arr['product_id']}" selected>{$search_arr['name']}</option>
+										<option value="{$search_arr['product_id']}" selected>{$search_arr['product_name']}</option>
 										{/if} 
 									</select>  
 								</div> 
 							</div>
 
-
 							<div class="col-md-3">
 								<div class="form-group">
-									<select id="category" name="category" class="form-control">
-										<option value="">--Select Category--</option>
-										{foreach $category_details as $v}
-										<option value="{$v.id}" {if isset($search_arr['category']) && $search_arr['category'] == $v.id}selected{/if}>
-											{$v.category_name}
-										</option>
-										{/foreach}
-									</select> 
+									<select id="category" name="category" class="category_name_ajax form-control select2">
+										{if $search_arr['category']}
+										<option value="{$search_arr['category']}" selected>{$search_arr['category_name']}</option>
+										{/if} 
+									</select>  
 								</div> 
 							</div>
-
-
-
-
 
 
 							<div class="col-md-2">
@@ -117,7 +109,7 @@
 			<div class="card"> 
 				<div class="card-header card-header-rose card-header-icon">
 
-					<h4 class="card-title">Vehicle Details</h4>
+					<h4 class="card-title">Loaded Items</h4>
 				</div> 
 				<div class="card-body">
 					<div class="table-responsive">
@@ -129,6 +121,8 @@
 									<th>Item Name</th>
 									<th>Category</th>
 									<th>Stock</th>
+									<th>Sale Rate</th>
+									<th>MRP</th>
 									<th>Status</th>
 									<th class="text-center">{lang('action')}</th>   
 								</tr>
@@ -163,7 +157,26 @@
 
 				placeholder: 'Select an Item',
 				ajax: {
-					url:'{base_url()}salesman/autocomplete/item_name_ajax',
+					url:'{base_url()}salesman/autocomplete/assigend_item_name_ajax',
+
+					type: 'post',
+					dataType: 'json',
+					delay:250,
+					processResults: function(data) {
+						return {
+							results: data
+						};
+					}
+				},
+
+			});
+
+
+			$('.category_name_ajax').select2({
+
+				placeholder: 'Select an Item',
+				ajax: {
+					url:'{base_url()}salesman/autocomplete/assigend_category_ajax',
 
 					type: 'post',
 					dataType: 'json',
@@ -209,7 +222,7 @@
 				}],
 
 				'ajax': {
-					'url':'{base_url()}salesman/settings/get_item_list_ajax',
+					'url':'{base_url()}salesman/jobs/get_assigned_item_ajax',
 					"type": "POST", 
 					"data" : {
 						
@@ -226,9 +239,11 @@
 
 					{ data: 'index'},
 					{ data: 'barcode'},
-					{ data: 'name'},
+					{ data: 'product_name'},
 					{ data: 'category_name'},
-					{ data: 'stock'},
+					{ data: 'saled_quantities'},
+					{ data: 'sale_rate'},
+					{ data: 'mrp'},
 					{ data: 'status'},
 					{
 						mRender: function(data, type, row) {
