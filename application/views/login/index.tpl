@@ -15,60 +15,60 @@
     </div>
     <div class="card-body pt-0">                                    
 
-       {form_open('', 'class="my-4"')}          
-       <div class="form-group mb-2">
-        <label class="form-label" for="username">Username</label>
-        <input type="text" class="form-control" id="username" name="user_name" placeholder="{lang('username')}" required autocomplete="off" placeholder="Enter username">                               
-    </div><!--end form-group--> 
+        {form_open('', 'class="my-4 needs-validation"')}          
+        <div class="form-group mb-2">
+            <label class="form-label" for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="user_name" placeholder="{lang('username')}" required autocomplete="off" placeholder="Enter username">                               
+        </div><!--end form-group--> 
+{form_error('user_name')}
+        <div class="form-group position-relative">
+            <label class="form-label" for="userpassword">Password</label>                                            
+            <div class="input-group">
 
-    <div class="form-group position-relative">
-        <label class="form-label" for="userpassword">Password</label>                                            
-        <div class="input-group">
 
-           
-            <input type="password" class="form-control" name="password" placeholder="{lang('password')}" required id="userpassword" placeholder="Enter password">                            
-            <button type="button" class="btn btn-outline-secondary toggle-password input-group-text" id="togglePassword">
-                <i class="fas fa-eye"></i>
-            </button>
-        </div>
-    </div><!--end form-group--> 
-
-    <div class="form-group row mt-3">
-        <div class="col-sm-6">
-            <div class="form-check form-switch form-switch-success">
-                <input class="form-check-input" type="checkbox" id="customSwitchSuccess">
-                <label class="form-check-label" for="customSwitchSuccess">Remember me</label>
+                <input type="password" class="form-control" name="password" placeholder="{lang('password')}" required id="userpassword" placeholder="Enter password">                            
+                <button type="button" class="btn btn-outline-secondary toggle-password input-group-text" id="togglePassword">
+                    <i class="fas fa-eye"></i>
+                </button>
             </div>
-        </div><!--end col--> 
-        <div class="col-sm-6 text-end">
-            <a href="{base_url('forgot')}" class="text-muted font-13"><i class="dripicons-lock"></i> Forgot password?</a>                                    
-        </div><!--end col--> 
-    </div><!--end form-group--> 
+        </div><!--end form-group--> 
+{form_error('password')}
+        <div class="form-group row mt-3">
+            <div class="col-sm-6">
+                <div class="form-check form-switch form-switch-success">
+                    <input class="form-check-input" type="checkbox" id="customSwitchSuccess">
+                    <label class="form-check-label" for="customSwitchSuccess">Remember me</label>
+                </div>
+            </div><!--end col--> 
+            <div class="col-sm-6 text-end">
+                <a href="{base_url('forgot')}" class="text-muted font-13"><i class="dripicons-lock"></i> Forgot password?</a>                                    
+            </div><!--end col--> 
+        </div><!--end form-group--> 
 
-    <div class="form-group mb-0 row">
-        <div class="col-12">
-            <div class="d-grid mt-3">
-                <button class="btn btn-primary" type="submit" name="login" value="login">Log In <i class="fas fa-sign-in-alt ms-1"></i></button>
-            </div>
-        </div><!--end col--> 
-    </div> <!--end form-group-->                           
-    {form_close()}
- <!--        <div class="text-center  mb-2">
-            <p class="text-muted">Don't have an account ?  <a href="auth-register.html" class="text-primary ms-2">Free Resister</a></p>
-            <h6 class="px-3 d-inline-block">Or Login With</h6>
-        </div> -->
-       <!--  <div class="d-flex justify-content-center">
-            <a href="#" class="d-flex justify-content-center align-items-center thumb-md bg-blue-subtle text-blue rounded-circle me-2">
-                <i class="fab fa-facebook align-self-center"></i>
-            </a>
-            <a href="#" class="d-flex justify-content-center align-items-center thumb-md bg-info-subtle text-info rounded-circle me-2">
-                <i class="fab fa-twitter align-self-center"></i>
-            </a>
-            <a href="#" class="d-flex justify-content-center align-items-center thumb-md bg-danger-subtle text-danger rounded-circle">
-                <i class="fab fa-google align-self-center"></i>
-            </a>
-        </div> -->
-    </div><!--end card-body-->
+        <div class="form-group mb-0 row">
+            <div class="col-12">
+                <div class="d-grid mt-3">
+                    <button class="btn btn-primary" type="submit" name="login" value="login">Log In <i class="fas fa-sign-in-alt ms-1"></i></button>
+                </div>
+            </div><!--end col--> 
+        </div> <!--end form-group-->                           
+        {form_close()}
+<!--        <div class="text-center  mb-2">
+<p class="text-muted">Don't have an account ?  <a href="auth-register.html" class="text-primary ms-2">Free Resister</a></p>
+<h6 class="px-3 d-inline-block">Or Login With</h6>
+</div> -->
+<!--  <div class="d-flex justify-content-center">
+<a href="#" class="d-flex justify-content-center align-items-center thumb-md bg-blue-subtle text-blue rounded-circle me-2">
+<i class="fab fa-facebook align-self-center"></i>
+</a>
+<a href="#" class="d-flex justify-content-center align-items-center thumb-md bg-info-subtle text-info rounded-circle me-2">
+<i class="fab fa-twitter align-self-center"></i>
+</a>
+<a href="#" class="d-flex justify-content-center align-items-center thumb-md bg-danger-subtle text-danger rounded-circle">
+<i class="fab fa-google align-self-center"></i>
+</a>
+</div> -->
+</div><!--end card-body-->
 </div><!--end card-->
 
 
@@ -76,19 +76,35 @@
 {block name=footer} 
 
 <script>
-document.getElementById('togglePassword').addEventListener('click', function() {
-    var passwordField = document.getElementById('userpassword');
-    var icon = this.querySelector('i');
-    if (passwordField.type === "password") {
-        passwordField.type = "text";
-        icon.classList.remove("fa-eye");
-        icon.classList.add("fa-eye-slash");
-    } else {
-        passwordField.type = "password";
-        icon.classList.remove("fa-eye-slash");
-        icon.classList.add("fa-eye");
-    }
-});
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        var passwordField = document.getElementById('userpassword');
+        var icon = this.querySelector('i');
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            passwordField.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    });
+    (function () {
+        'use strict'
+
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
 </script>
 
 {/block}
