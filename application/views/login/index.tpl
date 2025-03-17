@@ -15,10 +15,11 @@
     </div>
     <div class="card-body pt-0">                                    
 
-        {form_open('', 'class="my-4 needs-validation"')}          
+        {form_open('', 'class="my-4 needs-validation" novalidate=""')}          
         <div class="form-group mb-2">
             <label class="form-label" for="username">Username</label>
-            <input type="text" class="form-control" id="username" name="user_name" placeholder="{lang('username')}" required autocomplete="off" placeholder="Enter username">                               
+            <input type="text" class="form-control" id="username" name="user_name" placeholder="{lang('username')}" required autocomplete="off" placeholder="Enter username">         
+            <div class="invalid-feedback">Enter username </div>                      
         </div><!--end form-group--> 
 {form_error('user_name')}
         <div class="form-group position-relative">
@@ -30,6 +31,7 @@
                 <button type="button" class="btn btn-outline-secondary toggle-password input-group-text" id="togglePassword">
                     <i class="fas fa-eye"></i>
                 </button>
+                <div class="invalid-feedback">Enter Password </div>
             </div>
         </div><!--end form-group--> 
 {form_error('password')}
