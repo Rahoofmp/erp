@@ -14,32 +14,48 @@ class Jobs extends Base_Controller {
 		$details = $search_arr = $post_arr=[];
 		// print_r($this->input->post());
 		// die();
-		if( $this->input->post() )
+
+		if( $this->input->post('submit') == 'reset')
 		{
-			if( $this->input->post('submit') == 'reset')
-			{
-				$search_arr = [];
+			$search_arr = [];
 
-			}elseif( $this->input->post('submit') == 'filter'){
-				$post_arr = $this->input->post();
+		}elseif( $this->input->post('filter')){
+			$post_arr = $this->input->post();
 
+			if(element('product_id',$post_arr)){
+				$search_arr['product_name'] =$this->Base_model->getProductName($post_arr['product_id']);
+				$search_arr['product_id'] = $post_arr['product_id'];
+			} 
 
-				if(element('product_id',$post_arr)){
-					$search_arr['product_name'] =$this->Base_model->getProductName($post_arr['product_id']);
-					$search_arr['product_id'] = $post_arr['product_id'];
-				} 
-
-				if(element('category',$post_arr)){
-					$search_arr['category_name'] =$this->Base_model->getCategoryName($post_arr['category']);
-					$search_arr['category'] = $post_arr['category'];
-
-				}
-				$search_arr['status'] = $post_arr['status'];
-
+			if(element('category',$post_arr)){
+				$search_arr['category_name'] =$this->Base_model->getCategoryName($post_arr['category']);
+				$search_arr['category'] = $post_arr['category'];
 
 			}
-			
+			$search_arr['status'] = $post_arr['status'];
+
 		}
+
+
+		elseif( $this->input->post('update')){
+			$post_arr = $this->input->post();
+			print_r($post_arr);
+			die();
+
+			if(element('product_id',$post_arr)){
+				$search_arr['product_name'] =$this->Base_model->getProductName($post_arr['product_id']);
+				$search_arr['product_id'] = $post_arr['product_id'];
+			} 
+
+			if(element('category',$post_arr)){
+				$search_arr['category_name'] =$this->Base_model->getCategoryName($post_arr['category']);
+				$search_arr['category'] = $post_arr['category'];
+
+			}
+			$search_arr['status'] = $post_arr['status'];
+
+		}
+
 
 
 		$data['search_arr'] = $search_arr; 

@@ -27,6 +27,97 @@
 	}
 </style>
 
+<div class="modal fade" id="exampleModalPrimary" tabindex="-1" role="dialog" aria-labelledby="exampleModalPrimary1" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		{form_open('','')}
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<h6 class="modal-title m-0 text-white" id="exampleModalPrimary1">Item Changes</h6>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					
+					<div class="col-lg-12">
+						<div class="card">
+
+							<div class="card-header card-header-tabs card-header-info">
+								<div class="nav-tabs-navigation">
+									<div class="nav-tabs-wrapper"> 
+										<ul class="nav nav-tabs" role="tablist">
+											<li class="nav-item">
+												<a class="nav-link active" data-bs-toggle="tab" href="#edit_profile" role="tab" aria-selected="true">Mark as Delivered</a>
+											</li>
+											<li class="nav-item">
+												<a class="nav-link" data-bs-toggle="tab" href="#change_username" role="tab" aria-selected="false">Damage & Return</a>
+											</li>
+
+
+										</ul>
+										
+										<div class="tab-content">
+											<div class="tab-pane p-3 active" id="edit_profile">
+												<div class="row"> 
+													<div class="col-md-12">
+														<div class="form-group bmd-form-group">
+															<label class="bmd-label-floating">Sale Count:</label>
+															<input type="number" name="sale_count" class="form-control" value="">
+														</div>
+													</div>
+												</div>
+												<br>
+												<div class="row">
+													<div class="col-md-12">
+														<div class="form-group bmd-form-group">
+															<label class="bmd-label-floating">Sale Price:</label>
+															<input type="number" class="form-control" name="sale_price" value=""> 
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane p-3" id="change_username">
+												<div class="row"> 
+													<div class="col-md-12 mb-3">
+														<div class="form-group bmd-form-group">
+															<label class="bmd-label-floating">Damaged Count</label>
+															<input type="number" class="form-control" name="damage_count" value="">
+														</div>
+													</div>
+												</div>
+												
+												<div class="row">
+													<div class="col-md-12 mb-3">
+														<div class="form-group bmd-form-group">
+															<label class="bmd-label-floating">Reason:</label>
+															<input type="text" class="form-control" name="reason" value="">
+
+														</div>
+
+														<input type="hidden" id="enc_item_id" name="enc_item_id" value="">
+
+													</div>
+													<div class="clearfix"></div>
+												</div>
+											</div> 
+										</div> 
+										
+									</div>
+								</div>
+							</div>
+						</div> 
+					</div>
+				</div>                                                   
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary btn-sm" name="update" value="update">Save changes</button>
+			</div>
+		</div>
+		{form_close()}
+	</div>
+</div>                               
+
+
 
 <div class="row "> 
 	<div class="col-sm-12 hidden-print"> 
@@ -81,11 +172,11 @@
 									</div>
 								</div>
 							</div>
-
+							
 							
 
 							<div class="col-md-4"> 
-								<button type="submit" class="btn btn-primary" name="submit" value="filter">
+								<button type="submit" class="btn btn-primary" name="filter" value="filter">
 									<i class="fa fa-filter"></i> {lang('button_filter')}
 								</button>
 								<button type="submit" class="btn btn-warning mr-1" name="submit" value="reset">
@@ -150,6 +241,12 @@
 
 	<script type="text/javascript">
 
+		$(document).on("click", ".openModal", function () {
+			var encId = $(this).data("enc-id"); 
+			$("#enc_item_id").val(encId); 
+		});
+
+
 		$(document).ready(function(){ 
 
 
@@ -174,7 +271,7 @@
 
 			$('.category_name_ajax').select2({
 
-				placeholder: 'Select an Item',
+				placeholder: 'Select a Category',
 				ajax: {
 					url:'{base_url()}salesman/autocomplete/assigend_category_ajax',
 
@@ -247,9 +344,10 @@
 					{ data: 'status'},
 					{
 						mRender: function(data, type, row) {
-							var link = '<a href = "add-item/' + row.enc_product_id +'" class="btn-sm btn btn-info btn-link" data-placement="top" title ="Edit" target="_blank"><i class="iconoir-edit-pencil" aria-hidden="true"></i></a>';
-
+							var link = '<button type="button" class="btn-sm btn btn-info btn-link openModal" data-bs-toggle="modal" data-bs-target="#exampleModalPrimary" data-enc-id="' + row.enc_item_id + '" title="Edit"><i class="iconoir-edit-pencil" aria-hidden="true"></i></button>';
 							return link;
+
+
 						}}, 
 					],
 
