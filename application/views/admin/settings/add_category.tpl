@@ -22,9 +22,9 @@
 					</div>                                 
 				</div>
 				<div class="card-body pt-0">
-					{form_open()}
+					{form_open('', 'class="needs-validation" id="custom-step" novalidate')}        
 
-					<form action="#" method="post" id="custom-step">
+					
 						<div class="tab-content" id="nav-tabContent">
 							<div class="tab-pane active" id="step1">
 								<div class="row">
@@ -34,6 +34,7 @@
 											<label for="txtName" class="col-lg-3 col-form-label">Category Name :</label>
 											<div class="col-lg-9">
 												<input type="text" id="name"  class="form-control" name="name" value="{$category_details['category_name']}" >
+												<div class="invalid-feedback">Enter Category Name</div>
 												{form_error('name')}
 											</div>
 										</div>
@@ -44,6 +45,7 @@
 											<label for="txtVnumber" class="col-lg-3 col-form-label">Category Tax(%) :</label>
 											<div class="col-lg-9">
 												<input type="text" id="tax" autocomplete="off" class="form-control" name="tax" value="{$category_details['tax']}">
+												<div class="invalid-feedback">Enter Category Tax</div>
 												{form_error('tax')}
 											</div>
 										</div>
@@ -59,6 +61,7 @@
 											<label for="txtVnumber" class="col-lg-3 col-form-label">Code :</label>
 											<div class="col-lg-9">
 												<input type="text" id="code" autocomplete="off" class="form-control" name="code" value="{$category_details['code']}" readonly>
+												<div class="invalid-feedback">Enter Code</div>
 												{form_error('code')}
 											</div>
 										</div>
@@ -72,6 +75,7 @@
 													<option value="active"  {if $category_details['status'] == 'active'} selected {/if} >Active</option>
 													<option value="inactive"  {if $category_details['status'] == 'inactive'} selected {/if}>Inactive</option>
 												</select> 
+												<div class="invalid-feedback">Choose an option</div>
 											</div>
 										</div>
 									</div>
@@ -89,7 +93,7 @@
 								</div>                                        
 							</div>
 						</div>
-					</form>
+					
 					{form_close()}
 				</div>
 			</div>
@@ -158,16 +162,26 @@
 
 {/block}
 
-{block footer}
+{block name=footer} 
 
 <script>
-	document.addEventListener("DOMContentLoaded", function() {
-		let vehicleInput = document.getElementById("vehicle_number");
 
-		vehicleInput.addEventListener("input", function() {
-			this.value = this.value.toUpperCase();
-		});
-	});
+  (function () {
+        'use strict'
+
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
 </script>
 
 

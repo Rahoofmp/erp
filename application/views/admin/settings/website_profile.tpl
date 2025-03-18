@@ -10,7 +10,7 @@
 			</div>
 			<div class="card-content pt-0"> 
 
-				{form_open("",'class="form form-horizontal"' )} 
+				{form_open("",'class="form form-horizontal needs-validation" novalidate=""' )} 
 				<div class="card-body pt-0">    
 
 					<div class="form-body"> 
@@ -53,4 +53,27 @@
 		</div>
 	</div>  
 </div> 
+{/block}
+{block name=footer} 
+
+<script>
+
+    (function () {
+        'use strict'
+
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+
 {/block}

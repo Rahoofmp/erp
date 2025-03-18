@@ -20,8 +20,8 @@
 						</div>  <!--end row-->                                  
 					</div>
 					<div class="card-body pt-0">
-						<form action="#" method="post" id="custom-step">
-							{form_open()}
+						
+							{form_open('', 'class="needs-validation" novalidate=""  id="custom-step"')} 
 							<div class="tab-content" id="nav-tabContent">
 								<div class="tab-pane active" id="step1">
 									<div class="row">
@@ -170,7 +170,7 @@
 								</div>
 							</div>
 							{form_close()}
-						</form>             
+						            
 					</div>
 				</div>
 			</div>                                                                              
@@ -185,9 +185,25 @@
 <script src="{assets_url()}plugins/select2/js/select2.min.js"></script>
 
 <script type="text/javascript">
+
 	$(document).ready(function(){ 
 
+	 (function () {
+        'use strict'
 
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
 		$('.vehicles_ajax').select2({
 
 			placeholder: 'Select a Vehicle',

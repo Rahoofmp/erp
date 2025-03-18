@@ -23,7 +23,7 @@
 					</div>                                 
 				</div>
 				<div class="card-body pt-0">
-					{form_open()}
+					{form_open('', 'class="needs-validation" id="custom-step" novalidate')}    
 					<form action="#" method="post" id="custom-step">
 						<div class="tab-content" id="nav-tabContent">
 							<div class="tab-pane active" id="step1">
@@ -207,6 +207,22 @@
 			});
 		});
 	});
+	  (function () {
+        'use strict'
+
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
 
 </script>
 
