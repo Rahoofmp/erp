@@ -32,7 +32,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtVnumber" class="col-lg-3 col-form-label">Code/Barcode :</label>
 											<div class="col-lg-9">
-												<input type="text" id="bar_code" autocomplete="off" class="form-control" name="bar_code" value="{$item_details['barcode']}">
+												<input type="text" id="bar_code" autocomplete="off" class="form-control" name="bar_code" value="{$item_details['barcode']}" required="">
 												{form_error('bar_code')}
 											</div>
 										</div>
@@ -41,7 +41,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtName" class="col-lg-3 col-form-label"> Item Name :</label>
 											<div class="col-lg-9">
-												<input type="text" id="name"  class="form-control" name="name" value="{$item_details['name']}" >
+												<input type="text" id="name"  class="form-control" name="name" value="{$item_details['name']}"  required="">
 												{form_error('name')}
 											</div>
 										</div>
@@ -53,7 +53,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtEmail" class="col-lg-3 col-form-label">Item Type :</label>
 											<div class="col-lg-9">
-												<select id="txtVehicle" name="type" class="form-control">
+												<select id="txtVehicle" name="type" class="form-control" required="">
 													<option value="service"  {if $item_details['type'] == 'service'} selected {/if} >Service</option>
 													<option value="product"  {if $item_details['type'] == 'product'} selected {/if}>Product</option>
 												</select> 
@@ -66,7 +66,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtEmail" class="col-lg-3 col-form-label">Category :</label>
 											<div class="col-lg-9">
-												<select id="category" name="category" class="form-control">
+												<select id="category" name="category" class="form-control" required="">
 													<option value="">--Select Category--</option>
 													{foreach $category_details as $v}
 													<option value="{$v.id}" {if $v.id == $item_details['category']}selected{/if}>{$v.category_name}</option>
@@ -81,7 +81,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtMobile" class="col-lg-3 col-form-label">Purchase Rate :</label>
 											<div class="col-lg-9">
-												<input type="number" id="purchase_rate"  class="form-control" name="purchase_rate" value="{$item_details['purchase_rate']}" >
+												<input type="number" id="purchase_rate"  class="form-control" name="purchase_rate" value="{$item_details['purchase_rate']}"  required="">
 												{form_error('purchase_rate')}
 											</div>
 										</div>
@@ -91,7 +91,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtMobile" class="col-lg-3 col-form-label">Sale Rate:</label>
 											<div class="col-lg-9">
-												<input type="number" id="sale_rate"  class="form-control" name="sale_rate" value="{$item_details['sale_rate']}" >
+												<input type="number" id="sale_rate"  class="form-control" name="sale_rate" value="{$item_details['sale_rate']}" required="" >
 												{form_error('sale_rate')}
 											</div>
 										</div>
@@ -101,7 +101,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtMobile" class="col-lg-3 col-form-label">MRP:</label>
 											<div class="col-lg-9">
-												<input type="number" id="mrp"  class="form-control" name="mrp" value="{$item_details['mrp']}" >
+												<input type="number" id="mrp"  class="form-control" name="mrp" value="{$item_details['mrp']}"  required="">
 												{form_error('mrp')}
 											</div>
 										</div>
@@ -123,7 +123,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtEmail" class="col-lg-3 col-form-label">OP Stock:</label>
 											<div class="col-lg-9">
-												<input type="number" id="stock"  class="form-control" name="stock" value="{$item_details['stock']}" >
+												<input type="number" id="stock"  class="form-control" name="stock" value="{$item_details['stock']}"  required="">
 												{form_error('stock')}
 											</div>
 										</div>
@@ -133,7 +133,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtMobile" class="col-lg-3 col-form-label">As of Date :</label>
 											<div class="col-lg-9">
-												<input id="txtMobile" name="as_date" type="date"  class="form-control" value="{$item_details['as_date']}">
+												<input id="txtMobile" name="as_date" type="date"  class="form-control" value="{$item_details['as_date']}" required="">
 												{form_error('open_bal')}
 											</div>
 										</div>

@@ -16,13 +16,13 @@
 					<div class="form-body"> 
 						<div class="form-group bmd-form-group">
 							<label class="bmd-label-floating">{lang('website_name')}<span class="danger">*</span></label>
-							<input type="text" id="website_name" class="form-control " name="website_name" value="{$site_info['name']}">
+							<input type="text" id="website_name" class="form-control " name="website_name" value="{$site_info['name']}" required="">
 							{form_error('website_name')}
 						</div> 
 
 						<div class="form-group bmd-form-group">
 							<label class="bmd-label-floating">{lang('address')}<span class="danger">*</span></label>
-							<textarea id="address" rows="5" class="form-control square" name="address" >{$site_info['address']}</textarea>
+							<textarea id="address" rows="5" class="form-control square" name="address" required="" >{$site_info['address']}</textarea>
 
 							{form_error('address')}
 						</div> 
@@ -30,13 +30,13 @@
 						<div class="form-group bmd-form-group">
 							<label class="bmd-label-floating">{lang('email')}<span class="danger">*</span></label>
 
-							<input type="email" id="email" class="form-control " name="email" value="{$site_info['email']}">
+							<input type="email" id="email" class="form-control " name="email" value="{$site_info['email']}" required="">
 							{form_error('email')}
 						</div>
 						<div class="form-group bmd-form-group">
 							<label class="bmd-label-floating">{lang('phone')}<span class="danger">*</span></label>
 
-							<input type="text" id="phone" class="form-control" name="phone" value="{$site_info['phone']}">
+							<input type="text" id="phone" class="form-control" name="phone" value="{$site_info['phone']}" required="">
 							{form_error('phone')}
 						</div> 
 					</div>

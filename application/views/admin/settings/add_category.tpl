@@ -33,7 +33,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtName" class="col-lg-3 col-form-label">Category Name :</label>
 											<div class="col-lg-9">
-												<input type="text" id="name"  class="form-control" name="name" value="{$category_details['category_name']}" >
+												<input type="text" id="name"  class="form-control" name="name" value="{$category_details['category_name']}"  required="">
 												<div class="invalid-feedback">Enter Category Name</div>
 												{form_error('name')}
 											</div>
@@ -44,7 +44,7 @@
 										<div class="form-group row mb-2">
 											<label for="txtVnumber" class="col-lg-3 col-form-label">Category Tax(%) :</label>
 											<div class="col-lg-9">
-												<input type="text" id="tax" autocomplete="off" class="form-control" name="tax" value="{$category_details['tax']}">
+												<input type="text" id="tax" autocomplete="off" class="form-control" name="tax" value="{$category_details['tax']}" required="">
 												<div class="invalid-feedback">Enter Category Tax</div>
 												{form_error('tax')}
 											</div>

@@ -29,7 +29,7 @@
 											<div class="form-group row mb-2">
 												<label for="txtName" class="col-lg-3 col-form-label">UserName:</label>
 												<div class="col-lg-9">
-													<input id="txtName" name="user_name" type="text" class="form-control">
+													<input id="txtName" name="user_name" type="text" class="form-control" required="">
 													{form_error('user_name')}
 												</div>
 											</div>
@@ -38,7 +38,7 @@
 											<div class="form-group row mb-2">
 												<label for="txtStaffid" class="col-lg-3 col-form-label">Name:</label>
 												<div class="col-lg-9">
-													<input id="txtStaffid" name="name" type="text" class="form-control">
+													<input id="txtStaffid" name="name" type="text" class="form-control" required="">
 													{form_error('name')}
 												</div>
 											</div>
@@ -49,7 +49,7 @@
 											<div class="form-group row mb-2">
 												<label for="txtMobile" class="col-lg-3 col-form-label">Mobile No:</label>
 												<div class="col-lg-9">
-													<input id="txtMobile" name="mobile" type="tel" class="form-control">
+													<input id="txtMobile" name="mobile" type="tel" class="form-control" required="">
 													{form_error('mobile')}
 												</div>
 											</div>
@@ -58,7 +58,7 @@
 											<div class="form-group row mb-2">
 												<label for="txtEmail" class="col-lg-3 col-form-label">Email:</label>
 												<div class="col-lg-9">
-													<input id="txtEmail" name="email" type="email" class="form-control">
+													<input id="txtEmail" name="email" type="email" class="form-control" required="">
 													{form_error('email')}
 												</div>
 											</div>
@@ -69,7 +69,7 @@
 											<div class="form-group row mb-2">
 												<label for="txtAddress" class="col-lg-3 col-form-label">Address:</label>
 												<div class="col-lg-9">
-													<textarea id="txtAddress" name="address" rows="4" class="form-control"></textarea>
+													<textarea id="txtAddress" name="address" rows="4" class="form-control" required=""></textarea>
 													{form_error('address')}
 												</div>
 											</div>
@@ -78,7 +78,7 @@
 											<div class="form-group row mb-2">
 												<label for="txtJobrole" class="col-lg-3 col-form-label">Job Role:</label>
 												<div class="col-lg-9">
-													<select id="user_type" name="user_type" class="form-control" onchange="toggleVehicleField()">
+													<select id="user_type" name="user_type" class="form-control" onchange="toggleVehicleField()" required="">
 														<option value="admin">Manager</option>
 														<option value="supervisor">Accountant</option>
 														<option value="salesman">Salesman</option>
@@ -88,7 +88,7 @@
 											<div class="form-group row mb-2" id="vehicleField" style="display: none;">
 												<label for="txtVehicle" class="col-lg-3 col-form-label">Vehicle:</label>
 												<div class="col-lg-9">
-													<select id="source" name="vehicle_id" class="vehicles_ajax form-control select2">
+													<select id="source" name="vehicle_id" class="vehicles_ajax form-control select2" required="">
 														{if $search_arr['vehicle_id']}
 														<option value="{$search_arr['vehicle_id']}" selected>{$search_arr['vehicle_name']}</option>
 														{/if} 
@@ -102,7 +102,7 @@
 											<div class="form-group row mb-2">
 												<label for="txtOpeningBal" class="col-lg-3 col-form-label">Opening Bal:</label>
 												<div class="col-lg-9">
-													<input id="txtOpeningBal" name="open_bal" type="number" class="form-control">
+													<input id="txtOpeningBal" name="open_bal" type="number" class="form-control" required="">
 													{form_error('open_bal')}
 												</div>
 											</div>
@@ -111,7 +111,7 @@
 											<div class="form-group row mb-2">
 												<label for="txtReceivePay" class="col-lg-3 col-form-label">Receive/Pay:</label>
 												<div class="col-lg-9">
-													<select id="txtReceivePay" name="re_pay" class="form-control">
+													<select id="txtReceivePay" name="re_pay" class="form-control" required="">
 														<option value="toreceive">To Receive</option>
 														<option value="topay">To Pay</option>
 													</select>
@@ -124,7 +124,7 @@
 											<div class="form-group row mb-2">
 												<label for="txtUnderGroup" class="col-lg-3 col-form-label">Under Group:</label>
 												<div class="col-lg-9">
-													<select id="txtUnderGroup" name="under_group" class="form-control">
+													<select id="txtUnderGroup" name="under_group" class="form-control" required="">
 														<option value="staffsalary">Staff Salary</option>
 													</select>
 												</div>
@@ -134,7 +134,7 @@
 											<div class="form-group row mb-2">
 												<label for="txtPassword" class="col-lg-3 col-form-label">Password:</label>
 												<div class="col-lg-9">
-													<input id="txtPassword" name="password" type="password" class="form-control">
+													<input id="txtPassword" name="password" type="password" class="form-control" required="">
 													{form_error('password')}
 												</div>
 											</div>
@@ -143,7 +143,7 @@
 											<div class="form-group row mb-2">
 												<label for="txtPassword" class="col-lg-3 col-form-label">Confirm Password:</label>
 												<div class="col-lg-9">
-													<input id="txtPassword" name="c_password" type="password" class="form-control">
+													<input id="txtPassword" name="c_password" type="password" class="form-control" required="">
 													{form_error('c_password')}
 												</div>
 											</div>
