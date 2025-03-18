@@ -12,8 +12,6 @@ class Jobs extends Base_Controller {
 	{ 
 
 		$details = $search_arr = $post_arr=[];
-		// print_r($this->input->post());
-		// die();
 
 		if( $this->input->post('submit') == 'reset')
 		{
@@ -38,21 +36,55 @@ class Jobs extends Base_Controller {
 
 
 		elseif( $this->input->post('update')){
+
+			$update_sale=false;
+			$reduce_stock=false;
+
 			$post_arr = $this->input->post();
-			print_r($post_arr);
-			die();
+			$id=$this->Base_model->encrypt_decrypt('decrypt',$post_arr['enc_item_id']);
+			$item_details=$this->Jobs_model->getLoadeditemDetails($id);
 
-			if(element('product_id',$post_arr)){
-				$search_arr['product_name'] =$this->Base_model->getProductName($post_arr['product_id']);
-				$search_arr['product_id'] = $post_arr['product_id'];
-			} 
+			if (empty($post_arr['sale_count']) && empty($post_arr['damage_count'])) {
 
-			if(element('category',$post_arr)){
-				$search_arr['category_name'] =$this->Base_model->getCategoryName($post_arr['category']);
-				$search_arr['category'] = $post_arr['category'];
-
+				$this->redirect('Unavailable Action','jobs/loaded-items',False);
 			}
-			$search_arr['status'] = $post_arr['status'];
+
+			
+			if ($post_arr['sale_count'] > $item_details['quantities'] || $post_arr['damage_count'] > $item_details['quantities']) {
+				$this->redirect('Invalid Count', 'jobs/loaded-items', false);
+			}
+
+			if ((!empty($post_arr['sale_count']) && empty($post_arr['sale_price'])) || 
+				(!empty($post_arr['sale_price']) && empty($post_arr['sale_count']))) 
+			{
+				$this->redirect('Both sale count and sale price are required together', 'jobs/loaded-items', false);
+			}
+
+			if ((!empty($post_arr['damage_count']) && empty($post_arr['reason'])) || 
+				(!empty($post_arr['reason']) && empty($post_arr['damage_count']))) 
+			{
+				$this->redirect('Both damage count and reason are required together', 'jobs/loaded-items', false);
+			}
+
+			$this->Jobs_model->begin();
+			$update_sale=$this->Jobs_model->updateSale($post_arr,$id);
+
+
+
+			if ($update_sale) {
+				$reduce_stock=$this->Jobs_model->reduceItemcount($post_arr,$id);
+			
+			}
+
+	
+			
+			if ($update_sale && $reduce_stock) {
+				$this->Jobs_model->commit();
+				$this->redirect('Sale Updated Successfully', 'jobs/loaded-items', TRUE);
+			}
+			else{
+				$this->redirect('Error on updation', 'jobs/loaded-items', false);
+			}
 
 		}
 

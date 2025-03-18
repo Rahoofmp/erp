@@ -28,6 +28,8 @@ class Jobs_model extends Base_model {
         $this->db->select('*');
         $this->db->from('job_details');
         $this->db->where('salesman_id', log_user_id());
+        $this->db->where('saled_quantities >', 0);
+
 
         if ($category_id = element('category_id', $search_arr)) {
             $this->db->where('categories', $category_id);
@@ -86,6 +88,71 @@ class Jobs_model extends Base_model {
 
         return $product_details;
     }
+
+
+    public function getLoadeditemDetails($id='') 
+    {
+        $item_details = array(); 
+        $this->db->select('*');
+        $this->db->from("job_details");
+        $this->db->where('id',$id);
+        $query = $this->db->get();
+
+        foreach ($query->result_array() as $row) 
+        {
+
+            $item_details=$row;
+        }
+
+        return $item_details;
+    }
+
+    public function updateSale($post_arr, $id)
+    {
+        if (!empty($post_arr['sale_count'])) {
+            $this->db->set('sale_count', 'sale_count + ' . $post_arr['sale_count'], false);
+        }
+        if (!empty($post_arr['sale_price'])) {
+            $this->db->set('sale_price', $post_arr['sale_price']);
+        }
+        if (!empty($post_arr['damage_count'])) {
+            $this->db->set('damage_count', 'damage_count + ' . $post_arr['damage_count'], false);
+        }
+        if (!empty($post_arr['reason'])) {
+            $this->db->set('reason', $post_arr['reason']);
+        }
+        $this->db->set('modified_date',date('Y-m-d'));
+        $this->db->where('id',$id);
+        return $this->db->update('job_details');
+        
+    }
+
+
+
+
+    public function reduceItemcount($post_arr, $id)
+    {
+        $update_expression = 'saled_quantities';
+
+        if (!empty($post_arr['sale_count'])) {
+            $update_expression .= ' - ' . $post_arr['sale_count'];
+        }
+
+        if (!empty($post_arr['damage_count'])) {
+            $update_expression .= ' - ' . $post_arr['damage_count'];
+        }
+
+        if ($update_expression !== 'saled_quantities') {
+            $this->db->set('saled_quantities', $update_expression, false);
+            $this->db->where('id', $id);
+            return $this->db->update('job_details');
+        }
+
+        return false; 
+    }
+
+
+
 
 
 

@@ -21,7 +21,7 @@
             <input type="text" class="form-control" id="username" name="user_name" placeholder="{lang('username')}" required autocomplete="off" placeholder="Enter username">         
             <div class="invalid-feedback">Enter username </div>                      
         </div><!--end form-group--> 
-{form_error('user_name')}
+        {form_error('user_name')}
         <div class="form-group position-relative">
             <label class="form-label" for="userpassword">Password</label>                                            
             <div class="input-group">
@@ -34,7 +34,7 @@
                 <div class="invalid-feedback">Enter Password </div>
             </div>
         </div><!--end form-group--> 
-{form_error('password')}
+        {form_error('password')}
         <div class="form-group row mt-3">
             <div class="col-sm-6">
                 <div class="form-check form-switch form-switch-success">
