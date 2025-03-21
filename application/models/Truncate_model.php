@@ -76,6 +76,21 @@ class Truncate_model extends Base_Model {
 				return $return_arr;
 			}
 		}
+		if(in_array($dbprefix.'company_wallet', $table_list))
+		{
+			$this->db->truncate("company_wallet");
+			$wallet_details = array(
+				"id" => 1
+			);
+			$insert_cw = $this->db->insert('company_wallet', $wallet_details);
+			if(!$insert_cw)
+			{
+				$return_arr['status'] = FALSE;
+				$return_arr['message'] = lang('company_wallet_info_insertion_failed');
+				return $return_arr;
+			}
+		}
+
 
 		if(in_array($dbprefix."activate_inactivate_history", $table_list))
 		{
@@ -212,6 +227,10 @@ class Truncate_model extends Base_Model {
 		if(in_array($dbprefix."job_details", $table_list))
 		{
 			$this->db->truncate("job_details");
+		} 
+		if(in_array($dbprefix."accounts", $table_list))
+		{
+			$this->db->truncate("accounts");
 		}   
 		//V2 END
 
