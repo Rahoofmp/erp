@@ -1,0 +1,44 @@
+CREATE TABLE `company_wallet` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL DEFAULT 0,
+  `wallet` double NOT NULL DEFAULT 0,
+  `open_balance` bigint(20) NOT NULL,
+  `wallet_withdrawal` double NOT NULL,
+  `fund_transfer` double NOT NULL,
+  `add_fund` double NOT NULL,
+  `deduct_fund` double NOT NULL,
+  `deposit_wallet` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+INSERT INTO `company_wallet` (`id`, `user_id`, `wallet`, `open_balance`, `wallet_withdrawal`, `fund_transfer`, `add_fund`, `deduct_fund`, `deposit_wallet`) VALUES
+(1, 0, 0, 0, 0, 0, 0, 0, 0);
+
+
+ALTER TABLE `company_wallet`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `company_wallet`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+
+  CREATE TABLE `accounts` (
+  `id` int(11) NOT NULL,
+  `amount` double NOT NULL,
+  `transfer_type` varchar(250) NOT NULL,
+  `type` varchar(250) NOT NULL,
+  `remarks` text NOT NULL,
+  `done_by` int(11) NOT NULL,
+  `date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `accounts`
+  ADD PRIMARY KEY (`id`);
+
+  ALTER TABLE `accounts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+
+
