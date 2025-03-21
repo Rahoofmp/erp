@@ -77,67 +77,7 @@
 									</div>
 
 
-									<div class="col-md-6">
-										<div class="form-group row mb-2">
-											<label for="txtMobile" class="col-lg-3 col-form-label">Purchase Rate :</label>
-											<div class="col-lg-9">
-												<input type="number" id="purchase_rate"  class="form-control" name="purchase_rate" value="{$item_details['purchase_rate']}"  required="">
-												{form_error('purchase_rate')}
-											</div>
-										</div>
-									</div>
-
-									<div class="col-md-6">
-										<div class="form-group row mb-2">
-											<label for="txtMobile" class="col-lg-3 col-form-label">Sale Rate:</label>
-											<div class="col-lg-9">
-												<input type="number" id="sale_rate"  class="form-control" name="sale_rate" value="{$item_details['sale_rate']}" required="" >
-												{form_error('sale_rate')}
-											</div>
-										</div>
-									</div>
-
-									<div class="col-md-6">
-										<div class="form-group row mb-2">
-											<label for="txtMobile" class="col-lg-3 col-form-label">MRP:</label>
-											<div class="col-lg-9">
-												<input type="number" id="mrp"  class="form-control" name="mrp" value="{$item_details['mrp']}"  required="">
-												{form_error('mrp')}
-											</div>
-										</div>
-									</div>
-
-									<div class="col-md-6">
-										<div class="form-group row mb-2">
-											<label for="txtEmail" class="col-lg-3 col-form-label">Tax Category :</label>
-											<div class="col-lg-9">
-												<input type="number" id="tax_cat"  class="form-control" name="tax_cat" value="{$item_details['tax']}" readonly>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<div class="row">
-
-									<div class="col-md-6">
-										<div class="form-group row mb-2">
-											<label for="txtEmail" class="col-lg-3 col-form-label">OP Stock:</label>
-											<div class="col-lg-9">
-												<input type="number" id="stock"  class="form-control" name="stock" value="{$item_details['stock']}"  required="">
-												{form_error('stock')}
-											</div>
-										</div>
-									</div>
-
-									<div class="col-md-6">
-										<div class="form-group row mb-2">
-											<label for="txtMobile" class="col-lg-3 col-form-label">As of Date :</label>
-											<div class="col-lg-9">
-												<input id="txtMobile" name="as_date" type="date"  class="form-control" value="{$item_details['as_date']}" required="">
-												{form_error('open_bal')}
-											</div>
-										</div>
-									</div>
+									
 
 
 									{if $enc_id}
@@ -185,44 +125,23 @@
 <script>
 
 
-	$(document).ready(function() {
-		$('#category').change(function() {
-			var category_id = $(this).val(); 
 
-			$.ajax({
-				url: '{base_url()}admin/settings/get_tax_ajax', 
-				type: "POST",
-				data: { category_id: category_id },
-				dataType: "json",
-				success: function(response) {
-					if (response.status == "success") {
-						$('#tax_cat').val(response.tax); 
-					} else {
-						alert("Error fetching tax category.");
-					}
-				},
-				error: function() {
-					alert("AJAX request failed.");
+	(function () {
+		'use strict'
+
+		var forms = document.querySelectorAll('.needs-validation')
+		Array.prototype.slice.call(forms)
+		.forEach(function (form) {
+			form.addEventListener('submit', function (event) {
+				if (!form.checkValidity()) {
+					event.preventDefault()
+					event.stopPropagation()
 				}
-			});
-		});
-	});
-	  (function () {
-        'use strict'
 
-        var forms = document.querySelectorAll('.needs-validation')
-        Array.prototype.slice.call(forms)
-        .forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-
-                form.classList.add('was-validated')
-            }, false)
-        })
-    })()
+				form.classList.add('was-validated')
+			}, false)
+		})
+	})()
 
 </script>
 

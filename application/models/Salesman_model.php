@@ -51,13 +51,13 @@ class Salesman_model extends Base_model {
     public function getCategoryByItem($id) 
     {
         $details = array();
-        $this->db->select('category,stock');
-        $this->db->from('products');
+        $this->db->select('category_id,stock');
+        $this->db->from('purchase');
         $this->db->where('id', $id);
         $this->db->limit(1);
         $query = $this->db->get();
         foreach ($query->result_array() as $row) {
-            $row['category_name']=$this->Base_model->getCategoryName($row['category']);
+            $row['category_name']=$this->Base_model->getCategoryName($row['category_id']);
             $details = $row;
         }
         return $details;
@@ -67,7 +67,7 @@ class Salesman_model extends Base_model {
         $this->db->set('stock', 'stock - ' . (int)$qty, false)
         ->where('id', (int)$product_id)
         ->where('stock >=', (int)$qty)
-        ->update('products');
+        ->update('purchase');
 
         return $this->db->affected_rows() > 0;
     }

@@ -422,6 +422,9 @@ class Autocomplete extends Base_Controller {
 	}
 
 
+
+
+
 	function party_ajax() {
 
 		if ($this->input->is_ajax_request()) {
@@ -449,9 +452,9 @@ class Autocomplete extends Base_Controller {
 
 		if ($this->input->is_ajax_request()) {
 			$post = $this->input->post();
-			
 			$post['q'] = element('q', $post) ? $post['q'] : '';
-			$json = $this->Base_model->getItemAuto($post['q']);
+			$post['category_id'] = element('category_id', $post) ? $post['category_id'] : '';
+			$json = $this->Base_model->getItemAuto($post['q'],$post['category_id']);
 			echo json_encode($json);
 		}
 	}
@@ -466,6 +469,8 @@ class Autocomplete extends Base_Controller {
 			echo json_encode($json);
 		}
 	}
+
+
 
 
 

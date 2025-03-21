@@ -164,7 +164,7 @@
 				dataType: "json",
 				success: function(response) {
 					if (response.status == "success") {
-						row.find('.category_id').val(response.details.category);
+						row.find('.category_id').val(response.details.category_id);
 						row.find('.category_name').val(response.details.category_name);
 						row.find('.stock').val(response.details.stock);
 					} else {

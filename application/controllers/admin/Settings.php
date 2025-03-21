@@ -345,15 +345,6 @@ class Settings extends Base_Controller {
 
 
 
-
-
-
-
-
-
-
-
-
 	function add_category($enc_id='')
 	{
 
@@ -404,174 +395,229 @@ class Settings extends Base_Controller {
 
 
 
-	function pin_allocation()
+	function purchase($enc_id='')
 	{
-		$packages = $this->Settings_model->getPackageUpgrade();
-		$data['packages'] = $packages;
-		if($this->input->post())
-		{
-			$post_arr=$this->input->post();
-			$count = $post_arr['count'];
-			$user_id = $this->Base_model->getUserId($post_arr['user_name']);
-			if(!$user_id)
-			{
-				$msg = 'Invalid user id';
-				$this->redirect($msg, "settings/pin-allocation", FALSE);
-			}
-			for ($i=0; $i < $count; $i++) { 
-				# code...
-				$random_string=$this->Base_model->getRandomStringEpin(10,'pin_allocation','random_string');
-				$result=$this->Settings_model->addPinAllocation($post_arr,$random_string);
-			}
-			
-			if($result)
-			{
-				$msg = 'ePIN allocated successfully';
-				$this->redirect($msg, "settings/pin-allocation", TRUE);
-			}
-			else
-			{
-				$msg = 'error on creating ePIN...!';
-				$this->redirect($msg, "settings/pin-allocation", FALSE);
-			}
-			
+
+		$id=False;
+		if ($enc_id) {
+			$id=$this->Base_model->encrypt_decrypt('decrypt',$enc_id);
+			$data['category_details']=$this->Settings_model->getAllCategoryDetails($id);
+
+			$data['enc_id']=$enc_id;
 		}
 
-		
-		$data['title'] = 'ePIN ALLOCATION'; 
-		$this->loadView($data);
-	}
-	
-	function user_epin()
-	{
-		$data['title'] = 'USER ePIN'; 
-		if ($this->input->post('submit') == 'search')
-		{
-			$user_id=NULL;
+		if ($this->input->post('purchase')) {
 			$post_arr = $this->input->post();
 
-			if($post_arr['user_name'])
-			{
-				$user_name = $post_arr['user_name'];
+			foreach ($post_arr['products'] as $product) {
+				if (empty($product['product_id']) || 
+					empty($product['category_id']) || 
+					empty($product['quantity']) || 
+					empty($product['purchase_rate']) || 
+					empty($product['sale_rate']) || 
+					empty($product['mrp'])) {
 
-				$user_id = $this->Base_model->getUserId($user_name);
-				$data['user_name']=$user_name;
-
+					$this->redirect('Error: All product fields are required!', 'settings/purchase', FALSE);
+				return;
 			}
-			
-			$post_arr['from_date'] = ($post_arr['from_date']) ? $post_arr['from_date'] : date('Y-m-01');
-
-			$post_arr['end_date'] = ($post_arr['end_date']) ? $post_arr['end_date'] : date('Y-m-t');
-			
-			$from_date = $post_arr['from_date'];
-			$end_date = $post_arr['end_date']; 
-
-			$user_epin = $this->Settings_model->getUserEpinDetails($user_id, $from_date, $end_date );
-			$data['user_epin']=$user_epin;			
 		}
 
-		
-		$this->loadView($data);
+
+		$this->Settings_model->begin();
+
+		$purchase = $this->Settings_model->addPurchaseProducts($post_arr);
+
+		if ($purchase) {
+			$this->Settings_model->commit();
+			$this->redirect('Purchase Added Successfully', 'settings/purchase', TRUE);
+		} else {
+			$this->redirect('Error on purchasing', 'settings/purchase', FALSE);
+		}
 	}
-	public function removePin($id='')
+
+	$data['title'] = 'Purchase';
+	$this->loadView($data);
+}
+
+
+
+
+
+
+public function get_category_ajax() {
+	if ($this->input->is_ajax_request()) {
+		$draw = $this->input->post('draw');
+		$post_arr = $this->input->post();
+
+		$details = $this->Settings_model->getAllCategoryDetails($post_arr['category_id']);
+
+		if ($details !== null) {
+			echo json_encode(['status' => 'success', 'details' => $details]);
+		} else {
+			echo json_encode(['status' => 'error', 'message' => 'Tax not found']);
+		}
+	}
+}
+
+function pin_allocation()
+{
+	$packages = $this->Settings_model->getPackageUpgrade();
+	$data['packages'] = $packages;
+	if($this->input->post())
 	{
-		if($id)
-			$res=$this->Settings_model->removePin($id);
-		if($res)
-			$this->redirect('Successfully deleted','settings/user-epin',true);
+		$post_arr=$this->input->post();
+		$count = $post_arr['count'];
+		$user_id = $this->Base_model->getUserId($post_arr['user_name']);
+		if(!$user_id)
+		{
+			$msg = 'Invalid user id';
+			$this->redirect($msg, "settings/pin-allocation", FALSE);
+		}
+		for ($i=0; $i < $count; $i++) { 
+				# code...
+			$random_string=$this->Base_model->getRandomStringEpin(10,'pin_allocation','random_string');
+			$result=$this->Settings_model->addPinAllocation($post_arr,$random_string);
+		}
+
+		if($result)
+		{
+			$msg = 'ePIN allocated successfully';
+			$this->redirect($msg, "settings/pin-allocation", TRUE);
+		}
+		else
+		{
+			$msg = 'error on creating ePIN...!';
+			$this->redirect($msg, "settings/pin-allocation", FALSE);
+		}
+
 	}
 
 
+	$data['title'] = 'ePIN ALLOCATION'; 
+	$this->loadView($data);
+}
 
-
-	protected function validate_website_profile() {
-		$this->form_validation->set_rules('website_name', lang('website_name'), 'trim|required');
-		$this->form_validation->set_rules('address', lang('address'), 'trim|required');
-		$this->form_validation->set_rules('email', lang('email'), 'trim|required|valid_email');
-		$this->form_validation->set_rules('phone', lang('phone'), 'trim|required'); 
-		$validation_result =  $this->form_validation->run();
-		return $validation_result;
-	}
-
-
-	public function validate_add_vehicle()
+function user_epin()
+{
+	$data['title'] = 'USER ePIN'; 
+	if ($this->input->post('submit') == 'search')
 	{
-		$this->form_validation->set_rules('vehicle_name','Vehicle Name','trim|required');
-		$this->form_validation->set_rules('vehicle_number','Vehicle Number','trim|required|is_unique[vehicles.vehicle_number]');
-		$this->form_validation->set_rules('open_bal','Open Balance','trim|required');
-		$this->form_validation->set_rules('res_pay','Recieve/Pay','trim|required');
-		$result = $this->form_validation->run();
+		$user_id=NULL;
+		$post_arr = $this->input->post();
 
-		return $result;
-	}
+		if($post_arr['user_name'])
+		{
+			$user_name = $post_arr['user_name'];
 
-	public function validate_edit_vehicle()
-	{
-		$this->form_validation->set_rules('vehicle_name','Vehicle Name','trim|required');
-		$this->form_validation->set_rules('vehicle_number','Vehicle Number','trim|required');
-		$this->form_validation->set_rules('open_bal','Open Balance','trim|required');
-		$this->form_validation->set_rules('res_pay','Recieve/Pay','trim|required');
-		$result = $this->form_validation->run();
-		return $result;
-	}
+			$user_id = $this->Base_model->getUserId($user_name);
+			$data['user_name']=$user_name;
 
+		}
 
-	public function validate_add_party()
-	{
-		$this->form_validation->set_rules('party_name','Party Name','trim|required');
-		$this->form_validation->set_rules('open_bal','Open Balance','trim|required');
-		$this->form_validation->set_rules('res_pay','Recieve/Pay','trim|required');
-		$this->form_validation->set_rules('phone','Phone Number','trim|required');
-		$this->form_validation->set_rules('address','Address','trim|required');
-		$this->form_validation->set_rules('email','Email','trim|required');
-		$this->form_validation->set_rules('vehicle_id','Vehicle ','trim|required');
-		$result = $this->form_validation->run();
+		$post_arr['from_date'] = ($post_arr['from_date']) ? $post_arr['from_date'] : date('Y-m-01');
 
+		$post_arr['end_date'] = ($post_arr['end_date']) ? $post_arr['end_date'] : date('Y-m-t');
 
-		return $result;
+		$from_date = $post_arr['from_date'];
+		$end_date = $post_arr['end_date']; 
+
+		$user_epin = $this->Settings_model->getUserEpinDetails($user_id, $from_date, $end_date );
+		$data['user_epin']=$user_epin;			
 	}
 
 
-	public function validate_add_item()
-	{
-		$this->form_validation->set_rules('bar_code','Bar Code','trim|required|is_unique[products.barcode]');
-		$this->form_validation->set_rules('name','Product Name','trim|required');
-		$this->form_validation->set_rules('type','Open Balance','trim|required');
-		$this->form_validation->set_rules('category','Category','trim|required');
-		$this->form_validation->set_rules('purchase_rate','Purchase Rate','trim|required');
-		$this->form_validation->set_rules('sale_rate','Sale Rate','trim|required');
-		$this->form_validation->set_rules('mrp','MRP','trim|required');
-		$this->form_validation->set_rules('tax_cat','Tax Category','trim|required');
-		$this->form_validation->set_rules('stock','Stock','trim|required');
-		$this->form_validation->set_rules('as_date','Date','trim|required');
-		$result = $this->form_validation->run();
-		return $result;
-	}
+	$this->loadView($data);
+}
+public function removePin($id='')
+{
+	if($id)
+		$res=$this->Settings_model->removePin($id);
+	if($res)
+		$this->redirect('Successfully deleted','settings/user-epin',true);
+}
 
-	public function validate_update_item()
-	{
-		$this->form_validation->set_rules('bar_code','Bar Code','trim|required');
-		$this->form_validation->set_rules('name','Product Name','trim|required');
-		$this->form_validation->set_rules('type','Open Balance','trim|required');
-		$this->form_validation->set_rules('category','Category','trim|required');
-		$this->form_validation->set_rules('purchase_rate','Purchase Rate','trim|required');
-		$this->form_validation->set_rules('sale_rate','Sale Rate','trim|required');
-		$this->form_validation->set_rules('mrp','MRP','trim|required');
-		$this->form_validation->set_rules('tax_cat','Tax Category','trim|required');
-		$this->form_validation->set_rules('stock','Stock','trim|required');
-		$this->form_validation->set_rules('as_date','Date','trim|required');
-		$result = $this->form_validation->run();
-		return $result;
-	}
 
-	public function validate_add_category()
-	{
-		$this->form_validation->set_rules('name','Category Name','trim|required');
-		$this->form_validation->set_rules('tax','Category Tax','trim|required');
-		$result = $this->form_validation->run();
 
-		return $result;
-	}
+
+protected function validate_website_profile() {
+	$this->form_validation->set_rules('website_name', lang('website_name'), 'trim|required');
+	$this->form_validation->set_rules('address', lang('address'), 'trim|required');
+	$this->form_validation->set_rules('email', lang('email'), 'trim|required|valid_email');
+	$this->form_validation->set_rules('phone', lang('phone'), 'trim|required'); 
+	$validation_result =  $this->form_validation->run();
+	return $validation_result;
+}
+
+
+public function validate_add_vehicle()
+{
+	$this->form_validation->set_rules('vehicle_name','Vehicle Name','trim|required');
+	$this->form_validation->set_rules('vehicle_number','Vehicle Number','trim|required|is_unique[vehicles.vehicle_number]');
+	$this->form_validation->set_rules('open_bal','Open Balance','trim|required');
+	$this->form_validation->set_rules('res_pay','Recieve/Pay','trim|required');
+	$result = $this->form_validation->run();
+
+	return $result;
+}
+
+public function validate_edit_vehicle()
+{
+	$this->form_validation->set_rules('vehicle_name','Vehicle Name','trim|required');
+	$this->form_validation->set_rules('vehicle_number','Vehicle Number','trim|required');
+	$this->form_validation->set_rules('open_bal','Open Balance','trim|required');
+	$this->form_validation->set_rules('res_pay','Recieve/Pay','trim|required');
+	$result = $this->form_validation->run();
+	return $result;
+}
+
+
+public function validate_add_party()
+{
+	$this->form_validation->set_rules('party_name','Party Name','trim|required');
+	$this->form_validation->set_rules('open_bal','Open Balance','trim|required');
+	$this->form_validation->set_rules('res_pay','Recieve/Pay','trim|required');
+	$this->form_validation->set_rules('phone','Phone Number','trim|required');
+	$this->form_validation->set_rules('address','Address','trim|required');
+	$this->form_validation->set_rules('email','Email','trim|required');
+	$this->form_validation->set_rules('vehicle_id','Vehicle ','trim|required');
+	$result = $this->form_validation->run();
+
+
+	return $result;
+}
+
+
+public function validate_add_item()
+{
+	$this->form_validation->set_rules('bar_code','Bar Code','trim|required|is_unique[products.barcode]');
+	$this->form_validation->set_rules('name','Product Name','trim|required');
+	$this->form_validation->set_rules('type','Open Balance','trim|required');
+	$this->form_validation->set_rules('category','Category','trim|required');
+
+		// $this->form_validation->set_rules('as_date','Date','trim|required');
+	$result = $this->form_validation->run();
+	return $result;
+}
+
+public function validate_update_item()
+{
+	$this->form_validation->set_rules('bar_code','Bar Code','trim|required');
+	$this->form_validation->set_rules('name','Product Name','trim|required');
+	$this->form_validation->set_rules('type','Open Balance','trim|required');
+	$this->form_validation->set_rules('category','Category','trim|required');
+		// $this->form_validation->set_rules('as_date','Date','trim|required');
+	$result = $this->form_validation->run();
+	return $result;
+}
+
+public function validate_add_category()
+{
+	$this->form_validation->set_rules('name','Category Name','trim|required');
+	$this->form_validation->set_rules('tax','Category Tax','trim|required');
+	$result = $this->form_validation->run();
+
+	return $result;
+}
 
 
 

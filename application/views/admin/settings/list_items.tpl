@@ -128,7 +128,6 @@
 									<th>Bar-Code</th>
 									<th>Item Name</th>
 									<th>Category</th>
-									<th>Stock</th>
 									<th>Status</th>
 									<th class="text-center">{lang('action')}</th>   
 								</tr>
@@ -228,7 +227,6 @@
 					{ data: 'barcode'},
 					{ data: 'name'},
 					{ data: 'category_name'},
-					{ data: 'stock'},
 					{ data: 'status'},
 					{
 						mRender: function(data, type, row) {

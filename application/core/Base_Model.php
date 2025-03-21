@@ -2301,19 +2301,26 @@ public function getBarcodeAuto($term='') {
 return $output;
 }
 
-public function getItemAuto($term='') {
+public function getItemAuto($term='',$category_id='') {
 
     $output = [];
     $this->db->select('id,name');
     $this->db->from('products');
+
+    if ($category_id) {
+        $this->db->where('category',$category_id);
+    }
     if ($term) {
 
         $this->db->where("name LIKE '$term%'");
 
     }
+
+
     $this->db->limit(10);
     $this->db->order_by('id','ASC');
     $res = $this->db->get();
+
 
     foreach($res->result_array() as $row) {
         $output[] = ['id'=>$row['id'], 
@@ -2328,16 +2335,18 @@ return $output;
 public function getActiveItemAuto($term='') {
 
     $output = [];
-    $this->db->select('id,name');
-    $this->db->from('products');
+    $this->db->select('p.id, p.name');
+    $this->db->from('products p');
+    $this->db->join('purchase pu', 'p.id = pu.product_id', 'inner');
+    $this->db->where('p.status', 'active');
+
     if ($term) {
 
-        $this->db->where("name LIKE '$term%'");
+        $this->db->where("p.name LIKE '$term%'");
 
     }
     $this->db->limit(10);
     $this->db->order_by('id','ASC');
-    $this->db->where('stock > ','0');
     $res = $this->db->get();
 
     foreach($res->result_array() as $row) {

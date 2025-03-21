@@ -543,12 +543,7 @@ public function addNewItem($post_arr){
     $this->db->set('name',$post_arr['name']);
     $this->db->set('type',$post_arr['type']);
     $this->db->set('category',$post_arr['category']);
-    $this->db->set('purchase_rate',$post_arr['purchase_rate']);
-    $this->db->set('sale_rate',$post_arr['sale_rate']);
-    $this->db->set('mrp',$post_arr['mrp']);
-    $this->db->set('tax',$post_arr['tax_cat']);
-    $this->db->set('stock',$post_arr['stock']);
-    $this->db->set('as_date',$post_arr['as_date']);
+    // $this->db->set('as_date',$post_arr['as_date']);
     $this->db->set('created_date',$submit_date);
     $this->db->set('status','active');
     $result = $this->db->insert('products');
@@ -581,18 +576,37 @@ public function updateItem($post_arr,$id){
     $this->db->set('name',$post_arr['name']);
     $this->db->set('type',$post_arr['type']);
     $this->db->set('category',$post_arr['category']);
-    $this->db->set('purchase_rate',$post_arr['purchase_rate']);
-    $this->db->set('sale_rate',$post_arr['sale_rate']);
-    $this->db->set('mrp',$post_arr['mrp']);
-    $this->db->set('tax',$post_arr['tax_cat']);
-    $this->db->set('stock',$post_arr['stock']);
-    $this->db->set('as_date',$post_arr['as_date']);
+    // $this->db->set('as_date',$post_arr['as_date']);
     $this->db->set('status',$post_arr['status']);
     $this->db->where('id',$id);
     $result = $this->db->update('products');
     return $result;
 
 } 
+
+public function addPurchaseProducts($post_arr){
+
+   foreach ($post_arr['products'] as $product) {
+    $purchase=false;
+
+    $data = [
+        'product_id'      => $product['product_id'],
+        'category_id'     => $product['category_id'],
+        'purchase_rate'   => $product['purchase_rate'],
+        'sale_rate'       => $product['sale_rate'],
+        'mrp'            => $product['mrp'],
+        'stock'        => $product['quantity'],
+        'status'        => 'active',
+        'date_created'   => $post_arr['as_date'],
+        'date_updated'   => date('Y-m-d H:i:s'),
+    ];
+
+    $purchase=$this->db->insert('purchase', $data);
+
+}
+return $purchase;
+
+}
 
 
 

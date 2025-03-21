@@ -24,17 +24,11 @@ class Salesman extends Base_Controller {
 			$search_arr['salesman_username']=$salesman_id;
 			$data['salesman'] = element(0,$this->Salesman_model->getAllsalesmans( $search_arr ));
 
-			
-
 		}
 		if ($this->input->post('add_job')&& $this->validate_add_job()) {
 
-			
-
 			$post_arr=$this->input->post();
 
-	
-			
 			if (!isset($post_arr['products']) || empty($post_arr['products']) || !isset($post_arr['products'][0]['product_id']) ||empty($post_arr['products'][0]['product_id'])
 		) {
 				$this->redirect('No valid products chosen', 'salesman/create-job', false);
@@ -45,9 +39,6 @@ class Salesman extends Base_Controller {
 				$this->Salesman_model->reduceStock($product['product_id'], $product['quantity']);
 			}
 		}
-
-	
-
 
 		$ins=$this->Salesman_model->addJobDetails($post_arr);
 
@@ -150,8 +141,6 @@ public function get_category_ajax() {
 	if ($this->input->is_ajax_request()) {
 		$draw = $this->input->post('draw');
 		$post_arr = $this->input->post();
-
-
 		$details = $this->Salesman_model->getCategoryByItem($post_arr['item_id']);
 
 		if ($details !== null) {
