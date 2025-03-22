@@ -2,6 +2,10 @@
 
 {block header} 
 
+<link rel="stylesheet" type="text/css" href="{assets_url('plugins/DataTables/css/dataTables.bootstrap.min.css')}">
+<link rel="stylesheet" type="text/css" href="{assets_url('plugins/DataTables/css/dataTables.jqueryui.min.css')}">
+<link rel="stylesheet" type="text/css" href="{assets_url('plugins/DataTables/css/dataTables.foundation.min.css')}">
+
 {/block}
 
 {block body}
@@ -20,7 +24,8 @@
 					</div>                                 
 				</div>
 				<div class="card-body pt-0">
-					{form_open('', 'class="needs-validation" id="custom-step" novalidate')}  
+					{form_open('', 'class="needs-validation" novalidate=""')}          
+
 					<div class="row">
 
 
@@ -86,61 +91,139 @@
 			</div>
 		</div>
 	</div>
-	{if $table_details}
+
+
+
 	<div class="col-md-12">
 		<div class="card"> 
 			<div class="card-header card-header-rose card-header-icon">
-				
-				<h4 class="card-title">Account History</h4>
+
+				<h4 class="card-title">Loaded Items</h4>
 			</div> 
-			<div class="card-body pt-0">
+			<div class="card-body">
 				<div class="table-responsive">
-					<table class="table mb-0">
-						<thead class="table-light">
+					<table class="table" id="customer_list">
+						<thead class="bg-light text-warning">
 							<tr>
 								<th>#</th> 
 								<th>Amount</th>
 								<th>Transfer Type</th>
 								<th>Type</th>
-								<th>Remarks</th>  
+								<th>Note</th>
+								<th>Done By</th>
 								<th>Date</th>
-								  
+								<!-- <th class="text-center">{lang('action')}</th>    -->
 							</tr>
-						</thead>
-						<tbody> 
-							{foreach from=$table_details item=v}
-
-							<tr>
-								<td>{counter}</td>
-								<td>{cur_format($v.amount)}</td>  
-								<td>{ucfirst($v.transfer_type)}</td>  
-								<td>{ucfirst($v.type)}</td>  
-								<td>{$v.remarks}</td>  
-								<td>{$v.date|date_format:"%d-%m-%Y"}</td>
-								  
-
-								 
-							</tr>
-							{/foreach}  
-						</tbody>
+						</thead> 
 					</table>
 				</div>
 			</div> 
 		</div>
 		<div class="d-flex justify-content-center">  
-			<ul class="pagination start-links"></ul> 
+			<!-- <ul class="pagination start-links"></ul>  -->
 		</div>
-	</div>
-	{/if}  
+	</div>  
 </div>
 {/block}
 {block name="footer"}
-
-<script src="{assets_url()}backend/js/plugins-init/select2-init.js"></script> *}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{assets_url('plugins/DataTables/js/jquery.dataTables.min.js')}"></script>
+<script src="{assets_url('plugins/DataTables/js/dataTables.bootstrap.min.js')}"></script>
+<script src="{assets_url('plugins/DataTables/js/dataTables.jqueryui.min.js')}"></script>
+<script src="{assets_url('plugins/DataTables/js/dataTables.foundation.min.js')}"></script>
+<script src="{assets_url()}backend/js/plugins-init/select2-init.js"></script> 
 <script src="{assets_url()}backend/vendor/select2/js/select2.full.min.js"></script>
 <script src="{assets_url()}backend/js/plugins-init/select2-init.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+
+
+
+		var order = $('#customer_list').DataTable({
+
+			'processing': true,
+			'serverSide': true,
+			"autoWidth": false,
+			'serverMethod': 'post', 
+			"pagingType": "full_numbers",
+			"pageLength": 10, 
+			"lengthMenu": [
+				[10, 25, 50, 100, 150, 200, 250, 300, 350, 400], 
+				[10, 25, 50, 100, 150, 200, 250, 300, 350, 400]  
+			],
+
+
+			"sortable": true,
+
+			"aaSorting": [],
+			"order": [],
+			"aoColumnDefs": [
+				{ "bSortable": false, "aTargets": [0, 1, 2, 3, 4, 5, 6] },
+			],
+
+			"columnDefs": [{
+				"targets": 'no-sort',
+				"orderable": false,
+				"order": [],
+			}],
+
+			'ajax': {
+				'url':'{base_url()}admin/accounts/get_added_records_ajax',
+				"type": "POST", 
+				"data" : {
+
+					'category_id' : '{$search_arr['category']}',
+					'product_id' : '{$search_arr['product_id']}',
+					'status' : '{$search_arr['status']}',
+
+				}
+
+			},
+
+			'columns': [
+
+
+				{ data: 'index'},
+				{ data: 'amount'},
+				{ data: 'transfer_type'},
+				{ data: 'type'},
+				{ data: 'remarks'},
+				{ data: 'done_name'},
+				{ data: 'date'},
+				// {
+				// 	mRender: function(data, type, row) {
+				// 		var link = '<button type="button" class="btn-sm btn btn-info btn-link openModal" data-bs-toggle="modal" data-bs-target="#exampleModalPrimary" data-enc-id="' + row.enc_entry_id + '" title="Edit"><i class="iconoir-edit-pencil" aria-hidden="true"></i></button>';
+				// 		return link;
+
+
+				// 	}}, 
+			],
+
+
+			dom: '<"top"lBf>rt<"bottom"ip>',
+			buttons: [
+				{
+					extend: 'excelHtml5',
+					title: 'Vehicle Data',
+					className: 'btn btn-success',
+					exportOptions: {
+						columns: ':visible'
+					}
+				},
+
+				{
+					extend: 'print',
+					title: 'Vehicle Data',
+					className: 'btn btn-primary',
+					exportOptions: {
+						columns: ':visible'
+					}
+				}
+			],
+
+			success: function(response) { 
+			} 
+		});  
 
 		$('#amount').on('blur', function(){
 
@@ -172,6 +255,8 @@
 			}
 		},
 	});
+
+	
 	(function () {
 		'use strict'
 

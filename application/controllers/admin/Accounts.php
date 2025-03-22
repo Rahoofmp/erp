@@ -86,4 +86,25 @@ class Accounts extends Base_Controller {
 	}
 
 
+	public function get_added_records_ajax() {
+		if ($this->input->is_ajax_request()) {
+			$draw = $this->input->post('draw');
+			$post_arr = $this->input->post();
+
+			$count_without_filter = $this->Accounts_model->getEntryCount();
+			$count_with_filter = $this->Accounts_model->getAllEntrysAjax($post_arr, 1);
+			$details = $this->Accounts_model->getAllEntrysAjax( $post_arr,'');
+		
+			$response = array(
+				"draw" => intval($draw),
+				"iTotalRecords" => $count_without_filter,
+				"iTotalDisplayRecords" => $count_with_filter,
+				"aaData" => $details,
+			);
+
+			echo json_encode($response);
+		}
+	}
+
+
 }
