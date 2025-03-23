@@ -46,5 +46,7 @@ INSERT INTO `menu` (`id`, `en`, `parent_id`, `link`, `icon`, `status`, `perm_adm
 
 ALTER TABLE `company_wallet` ADD `sales` DOUBLE NOT NULL AFTER `deposit_wallet`, ADD `return` DOUBLE NOT NULL AFTER `sales`;
 
+INSERT INTO `menu` (`id`, `en`, `parent_id`, `link`, `icon`, `status`, `perm_admin`, `perm_customer`, `perm_store_keeper`, `perm_packager`, `perm_sub-admin`, `perm_dept_sub-admin`, `perm_pre_user`, `perm_user`, `perm_salesman`, `order`, `target`, `type`, `perm_designer`, `perm_purchaser`) VALUES (NULL, 'Expense', '#', 'accounts', 'iconoir-table-rows menu-icon', '1', '1', '0', '0', '0', '1', '0', '0', '0', '0', '0', NULL, 'site', '1', '1');
+
 
 
