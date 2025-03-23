@@ -2259,14 +2259,14 @@ public function getPartyAuto($term='') {
     $this->db->from('party_details');
     if ($term) {
 
-     $this->db->where("name LIKE '$term%'");
+       $this->db->where("name LIKE '$term%'");
 
- }
- $this->db->limit(10);
- $this->db->order_by('id','ASC');
- $res = $this->db->get();
+   }
+   $this->db->limit(10);
+   $this->db->order_by('id','ASC');
+   $res = $this->db->get();
 
- foreach($res->result_array() as $row) {
+   foreach($res->result_array() as $row) {
     $output[] = ['id'=>$row['id'], 
 
     'text' =>$row['name']  
@@ -2284,14 +2284,14 @@ public function getBarcodeAuto($term='') {
     $this->db->from('products');
     if ($term) {
 
-     $this->db->where("barcode LIKE '$term%'");
+       $this->db->where("barcode LIKE '$term%'");
 
- }
- $this->db->limit(10);
- $this->db->order_by('id','ASC');
- $res = $this->db->get();
+   }
+   $this->db->limit(10);
+   $this->db->order_by('id','ASC');
+   $res = $this->db->get();
 
- foreach($res->result_array() as $row) {
+   foreach($res->result_array() as $row) {
     $output[] = ['id'=>$row['id'], 
 
     'text' =>$row['barcode']  
@@ -2332,32 +2332,34 @@ public function getItemAuto($term='',$category_id='') {
 return $output;
 }
 
-public function getActiveItemAuto($term='') {
-
+public function getActiveItemAuto($term = '') {
     $output = [];
+
     $this->db->select('p.id, p.name');
     $this->db->from('products p');
     $this->db->join('purchase pu', 'p.id = pu.product_id', 'inner');
     $this->db->where('p.status', 'active');
 
-    if ($term) {
-
-        $this->db->where("p.name LIKE '$term%'");
-
+    if (!empty($term)) {
+        $this->db->like('p.name', $term, 'after');
     }
+
+    $this->db->group_by('p.id');
     $this->db->limit(10);
-    $this->db->order_by('id','ASC');
+    $this->db->order_by('p.id', 'ASC');
+
     $res = $this->db->get();
 
-    foreach($res->result_array() as $row) {
-        $output[] = ['id'=>$row['id'], 
+    foreach ($res->result_array() as $row) {
+        $output[] = [
+            'id'   => $row['id'],
+            'text' => $row['name']
+        ];
+    }
 
-        'text' =>$row['name']  
-    ];
+    return $output;
 }
 
-return $output;
-}
 
 public function getVehicleName($id) 
 {
@@ -2456,72 +2458,128 @@ public function getAssignedCategoryAuto($term = '') {
 
     return $output;
 }
-    public function numberTowords($amount)
+public function numberTowords($amount)
+{
+    if(empty($amount))
     {
-        if(empty($amount))
-        {
-            return "Please Enter a amount";
-        }
-
-        $amount_after_decimal = round($amount - ($num = floor($amount)), 2) * 100;
-        $amt_hundred = null;
-        $count_length = strlen($num);
-        $x = 0;
-        $string = array();
-        $change_words = array(0 => '', 1 => 'One', 2 => 'Two',
-            3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six',
-            7 => 'Seven', 8 => 'Eight', 9 => 'Nine',
-            10 => 'Ten', 11 => 'Eleven', 12 => 'Twelve',
-            13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen',
-            16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen',
-            19 => 'Nineteen', 20 => 'Twenty', 30 => 'Thirty',
-            40 => 'Forty', 50 => 'Fifty', 60 => 'Sixty',
-            70 => 'Seventy', 80 => 'Eighty', 90 => 'Ninety');
-        $here_digits = array('', 'Hundred','Thousand','Lakh', 'Crore');
-        while( $x < $count_length ) {
-            $get_divider = ($x == 2) ? 10 : 100;
-            $amount = floor($num % $get_divider);
-            $num = floor($num / $get_divider);
-            $x += $get_divider == 10 ? 1 : 2;
-            if ($amount) {
-                $add_plural = (($counter = count($string)) && $amount > 9) ? 's' : null;
-                $amt_hundred = ($counter == 1 && $string[0]) ? ' and ' : null;
-                $string [] = ($amount < 21) ? $change_words[$amount].' '. $here_digits[$counter]. $add_plural.' 
-                '.$amt_hundred:$change_words[floor($amount / 10) * 10].' '.$change_words[$amount % 10]. ' 
-                '.$here_digits[$counter].$add_plural.' '.$amt_hundred;
-            }
-            else $string[] = null;
-        }
-        $implode_to_Rupees = implode('', array_reverse($string));
-        $get_paise = ($amount_after_decimal > 0) ? "Point " . ($change_words[$amount_after_decimal / 10] . " 
-            " . $change_words[$amount_after_decimal % 10]) . ' ' : '';
-
-        return ($implode_to_Rupees ? $implode_to_Rupees . ' ' : '') . $get_paise;
+        return "Please Enter a amount";
     }
 
-    public function updateWalletBalance($amount,$wallet='') {
-        if($wallet){
-            $this->db->set($wallet, $wallet.' + ' .$amount, FALSE);
+    $amount_after_decimal = round($amount - ($num = floor($amount)), 2) * 100;
+    $amt_hundred = null;
+    $count_length = strlen($num);
+    $x = 0;
+    $string = array();
+    $change_words = array(0 => '', 1 => 'One', 2 => 'Two',
+        3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six',
+        7 => 'Seven', 8 => 'Eight', 9 => 'Nine',
+        10 => 'Ten', 11 => 'Eleven', 12 => 'Twelve',
+        13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen',
+        16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen',
+        19 => 'Nineteen', 20 => 'Twenty', 30 => 'Thirty',
+        40 => 'Forty', 50 => 'Fifty', 60 => 'Sixty',
+        70 => 'Seventy', 80 => 'Eighty', 90 => 'Ninety');
+    $here_digits = array('', 'Hundred','Thousand','Lakh', 'Crore');
+    while( $x < $count_length ) {
+        $get_divider = ($x == 2) ? 10 : 100;
+        $amount = floor($num % $get_divider);
+        $num = floor($num / $get_divider);
+        $x += $get_divider == 10 ? 1 : 2;
+        if ($amount) {
+            $add_plural = (($counter = count($string)) && $amount > 9) ? 's' : null;
+            $amt_hundred = ($counter == 1 && $string[0]) ? ' and ' : null;
+            $string [] = ($amount < 21) ? $change_words[$amount].' '. $here_digits[$counter]. $add_plural.' 
+            '.$amt_hundred:$change_words[floor($amount / 10) * 10].' '.$change_words[$amount % 10]. ' 
+            '.$here_digits[$counter].$add_plural.' '.$amt_hundred;
         }
+        else $string[] = null;
+    }
+    $implode_to_Rupees = implode('', array_reverse($string));
+    $get_paise = ($amount_after_decimal > 0) ? "Point " . ($change_words[$amount_after_decimal / 10] . " 
+        " . $change_words[$amount_after_decimal % 10]) . ' ' : '';
 
-        $query = $this->db->set('wallet', 'wallet + ' . $amount, FALSE)
-         ->where('id', 1)
-        ->update('company_wallet');
-        return $query;
+    return ($implode_to_Rupees ? $implode_to_Rupees . ' ' : '') . $get_paise;
+}
+
+public function updateWalletBalance($amount,$wallet='') {
+    if($wallet){
+        $this->db->set($wallet, $wallet.' + ' .$amount, FALSE);
     }
-    
-    public function getCompanyWallet($field_name= "wallet")
-    {
-        $wallet = 0;
-        $this->db->select($field_name);
-        $this->db->from('company_wallet');
-       
-        $query = $this->db->get();
-        foreach($query->result() as $row){
-            $wallet = $row->$field_name;
-        }
-        return $wallet;
+
+    $query = $this->db->set('wallet', 'wallet + ' . $amount, FALSE)
+    ->where('id', 1)
+    ->update('company_wallet');
+    return $query;
+}
+
+public function getCompanyWallet($field_name= "wallet")
+{
+    $wallet = 0;
+    $this->db->select($field_name);
+    $this->db->from('company_wallet');
+
+    $query = $this->db->get();
+    foreach($query->result() as $row){
+        $wallet = $row->$field_name;
     }
+    return $wallet;
+}
+
+public function getBills($term = '') {
+    $output = [];
+
+    $this->db->select('pu.bill_number');
+    $this->db->from('purchase pu');
+    $this->db->join('products p', 'p.id = pu.product_id', 'inner');
+    $this->db->where('p.status', 'active');
+
+    if (!empty($term)) {
+        $this->db->like('pu.bill_number', $term, 'after');
+    }
+
+    $this->db->group_by('pu.bill_number'); 
+    $this->db->limit(10);
+    $this->db->order_by('pu.bill_number', 'ASC');
+
+    $res = $this->db->get();
+
+    foreach ($res->result_array() as $row) {
+        $output[] = [
+            'id'   => $row['bill_number'],
+            'text' => $row['bill_number'] 
+        ];
+    }
+
+    return $output;
+}
+
+public function getJobs($term = '') {
+    $output = [];
+
+    $this->db->select('*');
+    $this->db->from('job_details');
+    $this->db->where('status', 'active');
+
+    if (!empty($term)) {
+        $this->db->like('job_id', $term, 'after');
+    }
+
+    $this->db->group_by('job_id'); 
+    $this->db->limit(10);
+    $this->db->order_by('job_id', 'ASC');
+
+    $res = $this->db->get();
+
+    foreach ($res->result_array() as $row) {
+        $output[] = [
+            'id'   => $row['job_id'],
+            'text' => $row['job_id'] 
+        ];
+    }
+
+    return $output;
+}
+
 
 }
 

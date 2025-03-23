@@ -266,7 +266,7 @@ class Settings extends Base_Controller {
 
 		$data['category_details']=$this->Settings_model->getAllCategoryDetails();
 
-		$data['title'] = 'Add Vehicle';
+		$data['title'] = 'Add Item';
 		$this->loadView($data);
 	}
 
@@ -318,7 +318,7 @@ class Settings extends Base_Controller {
 		$data['details'] = $details;
 
 		
-		$data['title'] = 'List Vehicles'; 
+		$data['title'] = 'List Items'; 
 		$this->loadView($data);
 	}
 
@@ -389,7 +389,7 @@ class Settings extends Base_Controller {
 
 		$data['table_details']=$this->Settings_model->getAllCategoryDetails();
 
-		$data['title'] = 'Add Vehicle';
+		$data['title'] = 'Add Category';
 		$this->loadView($data);
 	}
 
@@ -425,7 +425,14 @@ class Settings extends Base_Controller {
 
 		$this->Settings_model->begin();
 
+
+		$bill_number = $this->Settings_model->generateBillNumber($post_arr['as_date']); 
+		$post_arr['bill_number'] = $bill_number; 
+
+
+
 		$purchase = $this->Settings_model->addPurchaseProducts($post_arr);
+
 
 		if ($purchase) {
 			$this->Settings_model->commit();
@@ -458,6 +465,85 @@ public function get_category_ajax() {
 		}
 	}
 }
+
+
+
+
+
+function purchase_list()
+{ 
+	$details = $search_arr = $post_arr=[];
+	if( $this->input->post() )
+	{
+		if( $this->input->post('submit') == 'reset')
+		{
+			$search_arr = [];
+		}elseif( $this->input->post('submit') == 'filter'){
+			$post_arr = $this->input->post();
+
+			if(element('bill_id',$post_arr)){
+				
+				$search_arr['bill_id'] = $post_arr['bill_id'];
+			}
+
+			if(element('category',$post_arr)){
+				$search_arr['category_name'] =$this->Base_model->getCategoryName($post_arr['category']);
+				$search_arr['category'] = $post_arr['category'];
+			}
+
+			$search_arr['status'] = $post_arr['status'];
+		}
+	}
+
+	$data['category_details']=$this->Settings_model->getAllCategoryDetails();
+
+	$data['search_arr'] = $search_arr; 
+	$data['details'] = $details;
+
+
+	$data['title'] = 'Purchase List'; 
+	$this->loadView($data);
+}
+
+public function get_purchase_list_ajax() {
+	if ($this->input->is_ajax_request()) {
+		$draw = $this->input->post('draw');
+		$post_arr = $this->input->post();
+
+		$count_without_filter = $this->Settings_model->getPurchaseCount();
+		$count_with_filter = $this->Settings_model->getAllPurchaseAjax($post_arr, 1);
+		$details = $this->Settings_model->getAllPurchaseAjax( $post_arr,'');
+
+
+		$response = array(
+			"draw" => intval($draw),
+			"iTotalRecords" => $count_without_filter,
+			"iTotalDisplayRecords" => $count_with_filter,
+			"aaData" => $details,
+		);
+
+		echo json_encode($response);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function pin_allocation()
 {

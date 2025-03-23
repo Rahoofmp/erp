@@ -231,6 +231,11 @@ class Truncate_model extends Base_Model {
 		if(in_array($dbprefix."accounts", $table_list))
 		{
 			$this->db->truncate("accounts");
+		}  
+
+		if(in_array($dbprefix."purchase", $table_list))
+		{
+			$this->db->truncate("purchase");
 		}   
 		//V2 END
 

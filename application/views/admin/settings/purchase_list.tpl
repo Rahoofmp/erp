@@ -50,9 +50,9 @@
 
 							<div class="col-md-3">
 								<div class="form-group">
-									<select id="source" name="product_id" class="item_name_ajax form-control select2">
-										{if $search_arr['product_id']}
-										<option value="{$search_arr['product_id']}" selected>{$search_arr['name']}</option>
+									<select id="source" name="bill_id" class="bill_number_ajax form-control select2">
+										{if $search_arr['bill_id']}
+										<option value="{$search_arr['bill_id']}" selected>{$search_arr['bill_id']}</option>
 										{/if} 
 									</select>  
 								</div> 
@@ -117,7 +117,7 @@
 			<div class="card"> 
 				<div class="card-header card-header-rose card-header-icon">
 
-					<h4 class="card-title">List Items</h4>
+					<h4 class="card-title">Purchase List</h4>
 				</div> 
 				<div class="card-body">
 					<div class="table-responsive">
@@ -125,10 +125,14 @@
 							<thead class="bg-light text-warning">
 								<tr>
 									<th>#</th> 
-									<th>Bar-Code</th>
-									<th>Item Name</th>
-									<th>Category</th>
-									<th>Status</th>
+									<th>Bill Number</th>
+									<th>Category Name</th>
+									<th>Product Name</th>
+									<th>Purchase Rate</th>
+									<th>Sale Rate</th>
+									<th>MRP</th>
+									<th>Stock</th>
+									<th>Purchase Date</th>
 									<th class="text-center">{lang('action')}</th>   
 								</tr>
 							</thead> 
@@ -158,11 +162,11 @@
 		$(document).ready(function(){ 
 
 
-			$('.item_name_ajax').select2({
+			$('.bill_number_ajax').select2({
 
-				placeholder: 'Select an Item',
+				placeholder: 'Select Bill Number',
 				ajax: {
-					url:'{base_url()}admin/autocomplete/item_name_ajax',
+					url:'{base_url()}admin/autocomplete/bill_number_ajax',
 
 					type: 'post',
 					dataType: 'json',
@@ -208,12 +212,12 @@
 				}],
 
 				'ajax': {
-					'url':'{base_url()}admin/settings/get_item_list_ajax',
+					'url':'{base_url()}admin/settings/get_purchase_list_ajax',
 					"type": "POST", 
 					"data" : {
 						
 						'category_id' : '{$search_arr['category']}',
-						'product_id' : '{$search_arr['product_id']}',
+						'bill_id' : '{$search_arr['bill_id']}',
 						'status' : '{$search_arr['status']}',
 						
 					}
@@ -224,13 +228,17 @@
 
 
 					{ data: 'index'},
-					{ data: 'barcode'},
-					{ data: 'name'},
+					{ data: 'bill_number'},
 					{ data: 'category_name'},
-					{ data: 'status'},
+					{ data: 'product_name'},
+					{ data: 'purchase_rate'},
+					{ data: 'sale_rate'},
+					{ data: 'mrp'},
+					{ data: 'stock'},
+					{ data: 'purchase_date'},
 					{
 						mRender: function(data, type, row) {
-							var link = '<a href = "add-item/' + row.enc_product_id +'" class="btn-sm btn btn-info btn-link" data-placement="top" title ="Edit" target="_blank"><i class="iconoir-edit-pencil" aria-hidden="true"></i></a>';
+							var link = '<a href = "#" class="btn-sm btn btn-info btn-link" data-placement="top" title ="Edit" ><i class="iconoir-edit-pencil" aria-hidden="true"></i></a>';
 
 							return link;
 						}}, 

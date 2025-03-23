@@ -34,14 +34,16 @@ class Salesman extends Base_Controller {
 				$this->redirect('No valid products chosen', 'salesman/create-job', false);
 		}
 
+		$this->Salesman_model->begin();
+		$job_number = $this->Salesman_model->generateJobNumber($post_arr['as_date']); 
+		$post_arr['job_number'] = $job_number; 
+
 		foreach ($post_arr['products'] as $product) {
 			if (!empty($product['product_id']) && !empty($product['quantity'])) {
 				$this->Salesman_model->reduceStock($product['product_id'], $product['quantity']);
 			}
 		}
-
 		$ins=$this->Salesman_model->addJobDetails($post_arr);
-
 		if($ins){
 
 
@@ -58,6 +60,7 @@ class Salesman extends Base_Controller {
 
 				// 	// $send_mail = $this->Mail_model->sendEmails('salesman_registration', $post_arr);
 				// }
+			$this->Salesman_model->commit();
 
 			$msg = 'Job Assigned Successfully for '.$post_arr['sales_man_name'];
 			$this->redirect("<b>$msg </b>", "salesman/create-job", TRUE);
@@ -141,6 +144,7 @@ public function get_category_ajax() {
 	if ($this->input->is_ajax_request()) {
 		$draw = $this->input->post('draw');
 		$post_arr = $this->input->post();
+
 		$details = $this->Salesman_model->getCategoryByItem($post_arr['item_id']);
 
 		if ($details !== null) {
@@ -289,6 +293,64 @@ function salesman_ajax() {
 		$post['q'] = element('q', $post) ? $post['q'] : '';
 		$json = $this->Base_model->getsalesmanIdAuto($post['q']);
 		echo json_encode($json);
+	}
+}
+
+
+function list_job()
+{ 
+	$details = $search_arr = $post_arr=[];
+	if( $this->input->post() )
+	{
+		if( $this->input->post('submit') == 'reset')
+		{
+			$search_arr = [];
+		}elseif( $this->input->post('submit') == 'filter'){
+			$post_arr = $this->input->post();
+			if(element('job_id',$post_arr)){
+				
+				$search_arr['job_id'] = $post_arr['job_id'];
+			}
+
+			if(element('salesman',$post_arr)){
+				$search_arr['salesman_name'] =$this->Salesman_model->getAllSalesman($post_arr['salesman']);
+				$search_arr['salesman'] = $post_arr['salesman'];
+			}
+
+			$search_arr['status'] = $post_arr['status'];
+		}
+	}
+
+
+
+	$data['category_details']=$this->Salesman_model->getAllSalesman();
+
+	$data['search_arr'] = $search_arr; 
+	$data['details'] = $details;
+
+
+	$data['title'] = 'Purchase List'; 
+	$this->loadView($data);
+}
+
+public function get_job_list_ajax() {
+	if ($this->input->is_ajax_request()) {
+		$draw = $this->input->post('draw');
+		$post_arr = $this->input->post();
+		$this->load->model('Settings_model');
+		$count_without_filter = $this->Salesman_model->getSaleCount();
+		$count_with_filter = $this->Salesman_model->getAllJobAjax($post_arr, 1);
+		$details = $this->Salesman_model->getAllJobAjax( $post_arr,'');
+
+
+		$response = array(
+			"draw" => intval($draw),
+			"iTotalRecords" => $count_without_filter,
+			"iTotalDisplayRecords" => $count_with_filter,
+			"aaData" => $details,
+		);
+
+		echo json_encode($response);
 	}
 }
 

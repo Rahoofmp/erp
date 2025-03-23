@@ -470,6 +470,28 @@ class Autocomplete extends Base_Controller {
 		}
 	}
 
+	function bill_number_ajax() {
+
+		if ($this->input->is_ajax_request()) {
+			$post = $this->input->post();
+			
+			$post['q'] = element('q', $post) ? $post['q'] : '';
+			$json = $this->Base_model->getBills($post['q']);
+			echo json_encode($json);
+		}
+	}
+
+	function job_number_ajax() {
+
+		if ($this->input->is_ajax_request()) {
+			$post = $this->input->post();
+			
+			$post['q'] = element('q', $post) ? $post['q'] : '';
+			$json = $this->Base_model->getJobs($post['q']);
+			echo json_encode($json);
+		}
+	}
+
 
 
 

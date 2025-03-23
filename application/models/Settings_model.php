@@ -191,6 +191,15 @@ public function getItemCount()
     return $count;
 }
 
+public function getPurchaseCount()
+{
+    $this->db->select('*');
+    $this->db->from('purchase');
+    $count = $this->db->count_all_results();
+    return $count;
+}
+
+
 public function getAllVehiclesAjax( $search_arr =[],$count = 0) 
 {
 
@@ -352,7 +361,6 @@ public function getAllProductsAjax( $search_arr =[],$count = 0)
     }
     return $details;
 }
-
 
 public function getAllVehicleDetails($id) 
 {
@@ -584,12 +592,35 @@ public function updateItem($post_arr,$id){
 
 } 
 
+
+public function generateBillNumber($as_date) {
+    
+    $formatted_date = date('m-d-Y', strtotime($as_date));
+    $this->db->select('bill_number');
+    $this->db->from('purchase');
+    $this->db->like('bill_number', 'BLL-' . date('m-d', strtotime($as_date)) . '-', 'after');
+    $this->db->order_by('id', 'DESC'); 
+    $this->db->limit(1);
+    $query = $this->db->get();
+    $last_bill = $query->row();
+    if ($last_bill) {
+        $last_number = (int) substr($last_bill->bill_number, -2);
+        $new_number = str_pad($last_number + 1, 2, '0', STR_PAD_LEFT);
+    } else {
+        $new_number = '01';
+    }
+    return 'BLL-' . $formatted_date . '-' . $new_number;
+}
+
+
+
 public function addPurchaseProducts($post_arr){
 
    foreach ($post_arr['products'] as $product) {
     $purchase=false;
 
     $data = [
+        'bill_number'      => $post_arr['bill_number'],
         'product_id'      => $product['product_id'],
         'category_id'     => $product['category_id'],
         'purchase_rate'   => $product['purchase_rate'],
@@ -606,6 +637,57 @@ public function addPurchaseProducts($post_arr){
 }
 return $purchase;
 
+}
+
+
+public function getAllPurchaseAjax( $search_arr =[],$count = 0) 
+{
+    $row = $search_arr['start'];
+    $rowperpage = $search_arr['length'];
+    $this->db->select('*');
+    $searchValue = $search_arr['search']['value']; 
+    if('' != $searchValue) { 
+        $where = "(name LIKE '%$searchValue%' 
+        OR  barcode LIKE '%$searchValue%')"; 
+        $this->db->where($where);
+    }
+
+    if( $bill_id =  element('bill_id', $search_arr) ){
+        $this->db->where('bill_number', $bill_id);
+    }
+
+    if( $status =  element('status', $search_arr) ){
+        $this->db->where('status', $status);
+    }
+
+    if( $category_id =  element('category_id', $search_arr) ){
+        $this->db->where('category_id', $category_id);
+    }
+    $this->db->from('purchase ')
+    ->order_by( 'id', 'ASC' );
+
+
+    if($count) {
+        return $this->db->count_all_results();
+    }
+    $this->db->limit($rowperpage, $row);
+    $query = $this->db->get(); 
+
+
+    $details = [] ;
+    $i=1;
+    foreach ($query->result_array() as $row) {
+
+
+        $row['index'] =$search_arr['start']+$i;
+        $row['enc_item_id']=$this->encrypt_decrypt('encrypt',$row['id']);
+        $row['category_name']=$this->Base_model->getCategoryName($row['category_id']);
+        $row['product_name']=$this->Base_model->getProductName($row['product_id']);
+        $row['purchase_date'] = $row['date_created'];
+        $details[] = $row;
+        $i++;
+    }
+    return $details;
 }
 
 

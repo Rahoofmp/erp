@@ -30,7 +30,7 @@
 
 					<div class="col-md-6">
 						<div class="form-group row mb-2">
-							<label for="category" class="col-lg-3 col-form-label">Category:</label>
+							<label for="category" class="col-lg-3 col-form-label">Date:</label>
 							<div class="col-lg-9">
 								<input id="txtDate" name="as_date" type="date" value="{$party_details['as_date']}" class="form-control" required>
 								{form_error('as_date')}

@@ -50,9 +50,9 @@
 
 							<div class="col-md-3">
 								<div class="form-group">
-									<select id="source" name="product_id" class="item_name_ajax form-control select2">
-										{if $search_arr['product_id']}
-										<option value="{$search_arr['product_id']}" selected>{$search_arr['name']}</option>
+									<select id="source" name="job_id" class="job_id_ajax form-control select2">
+										{if $search_arr['job_id']}
+										<option value="{$search_arr['job_id']}" selected>{$search_arr['job_id']}</option>
 										{/if} 
 									</select>  
 								</div> 
@@ -61,11 +61,11 @@
 
 							<div class="col-md-3">
 								<div class="form-group">
-									<select id="category" name="category" class="form-control">
-										<option value="">--Select Category--</option>
+									<select id="salesman" name="salesman" class="form-control">
+										<option value="">--Select Salesman--</option>
 										{foreach $category_details as $v}
-										<option value="{$v.id}" {if isset($search_arr['category']) && $search_arr['category'] == $v.id}selected{/if}>
-											{$v.category_name}
+										<option value="{$v.user_id}" {if isset($search_arr['salesman']) && $search_arr['salesman'] == $v.user_id}selected{/if}>
+											{$v.user_name}
 										</option>
 										{/foreach}
 									</select> 
@@ -117,7 +117,7 @@
 			<div class="card"> 
 				<div class="card-header card-header-rose card-header-icon">
 
-					<h4 class="card-title">List Items</h4>
+					<h4 class="card-title">Job List</h4>
 				</div> 
 				<div class="card-body">
 					<div class="table-responsive">
@@ -125,10 +125,16 @@
 							<thead class="bg-light text-warning">
 								<tr>
 									<th>#</th> 
-									<th>Bar-Code</th>
-									<th>Item Name</th>
-									<th>Category</th>
-									<th>Status</th>
+									<th>Job Number</th>
+									<th>Salesman</th>
+									<th>Vehicle Name</th>
+									<th>Category Name</th>
+									<th>Product Name</th>
+									<th>Quantity</th>
+									<th>Sale Count</th>
+									<th>Sale Price</th>
+									<th>Damage/Return</th>
+									<th>Added Date</th>
 									<th class="text-center">{lang('action')}</th>   
 								</tr>
 							</thead> 
@@ -158,11 +164,11 @@
 		$(document).ready(function(){ 
 
 
-			$('.item_name_ajax').select2({
+			$('.job_id_ajax').select2({
 
-				placeholder: 'Select an Item',
+				placeholder: 'Select Bill Number',
 				ajax: {
-					url:'{base_url()}admin/autocomplete/item_name_ajax',
+					url:'{base_url()}admin/autocomplete/job_number_ajax',
 
 					type: 'post',
 					dataType: 'json',
@@ -208,12 +214,12 @@
 				}],
 
 				'ajax': {
-					'url':'{base_url()}admin/settings/get_item_list_ajax',
+					'url':'{base_url()}admin/salesman/get_job_list_ajax',
 					"type": "POST", 
 					"data" : {
 						
-						'category_id' : '{$search_arr['category']}',
-						'product_id' : '{$search_arr['product_id']}',
+						'salesman' : '{$search_arr['salesman']}',
+						'job_id' : '{$search_arr['job_id']}',
 						'status' : '{$search_arr['status']}',
 						
 					}
@@ -224,13 +230,19 @@
 
 
 					{ data: 'index'},
-					{ data: 'barcode'},
-					{ data: 'name'},
+					{ data: 'job_id'},
+					{ data: 'user_name'},
+					{ data: 'vehicle_name'},
 					{ data: 'category_name'},
-					{ data: 'status'},
+					{ data: 'product_name'},
+					{ data: 'quantities'},
+					{ data: 'sale_count'},
+					{ data: 'sale_price'},
+					{ data: 'damage_count'},
+					{ data: 'purchase_date'},
 					{
 						mRender: function(data, type, row) {
-							var link = '<a href = "add-item/' + row.enc_product_id +'" class="btn-sm btn btn-info btn-link" data-placement="top" title ="Edit" target="_blank"><i class="iconoir-edit-pencil" aria-hidden="true"></i></a>';
+							var link = '<a href = "#" class="btn-sm btn btn-info btn-link" data-placement="top" title ="Edit" ><i class="iconoir-edit-pencil" aria-hidden="true"></i></a>';
 
 							return link;
 						}}, 

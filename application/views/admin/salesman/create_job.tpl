@@ -14,7 +14,7 @@
 		<div class="card">
 			<div class="card-body">
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<div class="form-group row mb-2">
 							<label for="vehicle" class="col-lg-3 col-form-label">Vehicle:</label>
 							<div class="col-lg-9">
@@ -27,13 +27,25 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<div class="form-group row mb-2">
 							<label for="sales_man_name" class="col-lg-3 col-form-label">Salesman:</label>
 							<div class="col-lg-9">
 								<input type="text" id="sales_man_name" class="form-control" name="sales_man_name" value="{$job_details['salesman']}" readonly>
 								{form_error('sales_man_id')}
 								<input type="hidden" id="sales_man_id" name="sales_man_id" value="">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="form-group row mb-2">
+							<label for="category" class="col-lg-3 col-form-label">Date:</label>
+							<div class="col-lg-9">
+								<input id="txtDate" name="as_date" type="date" value="{$party_details['as_date']}" class="form-control" required>
+								{form_error('as_date')}
+								
+								{form_error('as_date')}
 							</div>
 						</div>
 					</div>
@@ -166,7 +178,7 @@
 					if (response.status == "success") {
 						row.find('.category_id').val(response.details.category_id);
 						row.find('.category_name').val(response.details.category_name);
-						row.find('.stock').val(response.details.stock);
+						row.find('.stock').val(response.details.total_stock);
 					} else {
 						alert("Error fetching category details.");
 					}
