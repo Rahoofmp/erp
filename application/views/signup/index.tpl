@@ -88,7 +88,7 @@
 											<div class="form-group row mb-2" id="vehicleField" style="display: none;">
 												<label for="txtVehicle" class="col-lg-3 col-form-label">Vehicle:</label>
 												<div class="col-lg-9">
-													<select id="source" name="vehicle_id" class="vehicles_ajax form-control select2" required="">
+													<select id="source" name="vehicle_id" class="vehicles_ajax form-control select2" >
 														{if $search_arr['vehicle_id']}
 														<option value="{$search_arr['vehicle_id']}" selected>{$search_arr['vehicle_name']}</option>
 														{/if} 
@@ -165,7 +165,7 @@
 										</div>
 									</div>
 									<div class="mt-2">
-										<button type="submit" id="btnAdd" name="register" value="website" class="btn btn-primary float-end">Add Staff</button>
+										<button type="submit" id="" name="register" value="website" class="btn btn-primary float-end">Add Staff</button>
 									</div>
 								</div>
 							</div>
