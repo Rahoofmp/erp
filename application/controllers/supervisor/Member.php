@@ -284,5 +284,131 @@ class Member extends Base_Controller {
 		$data['title'] = 'Modify Leads';
 		$this->loadView($data);
 	}
+	function pending_sales($value='')
+	{
+		$data['title']="Pending Sales";
+		$this->loadView($data);
+	}
+	function get_pending_sales_ajax($value='')
+	{
+		if ($this->input->is_ajax_request()) {
+			$draw = $this->input->post('draw');
+			$post_arr = $this->input->post();
 
+			$count_without_filter = $this->Member_model->getPendingSalesCount();
+			$count_with_filter = $this->Member_model->getAllPendingSalesAjax($post_arr, 1);
+			// $post_arr['salesman_id'] = log_user_id();
+
+			$details = $this->Member_model->getAllPendingSalesAjax( $post_arr,'');
+			$response = array(
+				"draw" => intval($draw),
+				"iTotalRecords" => $count_without_filter,
+				"iTotalDisplayRecords" => $count_with_filter,
+				"aaData" => $details,
+			);
+
+			echo json_encode($response);
+		}
+	}
+	function approve_sales($action='',$enc_sales_id='')
+	{
+		$pending_id=$this->Base_model->encrypt_decrypt( 'decrypt', $enc_sales_id);
+		if($pending_id){
+			if($pending_id){
+				$data['enc_sales_id']=$enc_sales_id;
+			}
+			// $this->load->model('Member_model');
+			$sales_data=$this->Member_model->getAllPendingSales($pending_id,'pending');
+
+			// print_r($sales_data);
+			// die();
+			if (empty($sales_data)) {
+				$this->redirect("Already processed","member/pending-sales",FALSE);
+			}
+			$ref_id=$sales_data['ref_id'];
+			$this->Member_model->begin();
+			if ($action=='approve') {
+				$update=$this->Member_model->updatePendingSalesStatus($pending_id,'approved');
+				$this->load->model('Accounts_model');
+				$insert=0;
+
+				if ($sales_data['type']=='sales') {
+
+
+					$sales_wallet=$sales_data['sale_count']*$sales_data['sale_price'];
+					$account_data = [
+						'amount'        => $sales_wallet,
+						'wallet_type'   => 'sales',
+						'transfer_type' => 'credit',
+						'type'          => 'sales',
+						'remarks'       => '',
+						'done_by'       => $sales_data['salesman_id'],
+						'date'          => date('Y-m-d H:i:s') 
+					];
+
+					$insert=$this->Accounts_model->insertAccountDetails( $account_data);
+					
+				}
+				elseif ($sales_data['type']=='return') {
+
+
+					$return_wallet=$sales_data['damage_count']*$sales_data['sale_rate'];
+					$account_data = [
+						'amount'        => -$return_wallet,
+						'wallet_type'   => 'return',
+						'transfer_type' => 'debit',
+						'type'          => 'return',
+						'remarks'       => $sales_data['reason'],
+						'done_by'       => $sales_data['salesman_id'],
+						'date'          => date('Y-m-d H:i:s') 
+					];
+
+					$insert=$this->Accounts_model->insertAccountDetails( $account_data);
+					
+				}
+				if ($insert) {
+					$this->Member_model->commit();
+					$this->redirect("Approved Successfully",'member/pending-sales',TRUE);
+				}
+				else{
+					$this->Member_model->roll_back();
+					$this->redirect("Error on approving",'member/pending-sales',FALSE);
+				}
+				
+			}
+			elseif ($action=='reject') {
+				$update=$this->Member_model->updatePendingSalesStatus($pending_id,'rejected');
+				$update_sales=0;
+
+				if ($sales_data['type']=='sales') {
+					$update_sales=$this->Member_model->updateSalesCount('sale_count',-$sales_data['sale_count'],$ref_id);
+
+					$update_sales=$this->Member_model->updateSalesCount('saled_quantities',$sales_data['sale_count'],$ref_id);
+
+
+				}
+				elseif ($sales_data['type']=='return') {
+					$update_sales=$this->Member_model->updateSalesCount('damage_count',-$sales_data['damage_count'],$ref_id);
+					$update_sales=$this->Member_model->updateSalesCount('saled_quantities',$sales_data['sale_count'],$ref_id);
+				}
+				if ($update_sales && $update) {
+					$this->Member_model->commit();
+					$this->redirect("Request rejected Successfully",'member/pending-sales',TRUE);
+				}
+				else{
+					$this->Member_model->roll_back();
+					$this->redirect("Error on rejecting request",'member/pending-sales',FALSE);
+				}
+			}
+			else{
+				$this->Member_model->roll_back();
+				$this->redirect("Invalid Action", "member/pending-sales", FALSE);
+			}
+			
+
+
+		}else{
+			$this->redirect("Error on action", "member/pending-sales", FALSE);
+		}
+	}
 }

@@ -92,7 +92,7 @@ class Jobs_model extends Base_model {
     {
         $product_details = array(); 
         $this->db->select('pd.*');
-        $this->db->select('pr.mrp,pr.sale_rate');
+        $this->db->select('pr.mrp,pr.sale_rate,pr.purchase_rate');
         $this->db->from("products as pd");
         $this->db->join("purchase as pr","pr.product_id=pd.id");
         $this->db->where('pd.id',$id);
@@ -142,6 +142,31 @@ class Jobs_model extends Base_model {
         $this->db->set('modified_date',date('Y-m-d'));
         $this->db->where('id',$id);
         return $this->db->update('job_details');
+        
+    }    
+    public function insertPendingSale($post_arr, $id)
+    {
+
+        if (!empty($post_arr['sale_count'])) {
+            $this->db->set('sale_count', $post_arr['sale_count']);
+            
+        }
+        if (!empty($post_arr['sale_price'])) {
+            $this->db->set('sale_price', $post_arr['sale_price']);
+        }
+        if (!empty($post_arr['damage_count'])) {
+            $this->db->set('damage_count', $post_arr['damage_count']);
+        }
+        if (!empty($post_arr['reason'])) {
+            $this->db->set('reason', $post_arr['reason']);
+        }
+        $this->db->set('type', $post_arr['type']);
+        $this->db->set('modified_date',date('Y-m-d'));
+        $this->db->set('ref_id',$id);
+        $this->db->set('status','pending');
+        $this->db->set('salesman_id',$post_arr['salesman_id']);
+
+        return $this->db->insert('pending_sales');
         
     }
 

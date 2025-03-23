@@ -41,6 +41,7 @@ class Jobs extends Base_Controller {
 			$reduce_stock=false;
 
 			$post_arr = $this->input->post();
+			
 			$id=$this->Base_model->encrypt_decrypt('decrypt',$post_arr['enc_item_id']);
 			$item_details=$this->Jobs_model->getLoadeditemDetails($id);
 
@@ -66,17 +67,27 @@ class Jobs extends Base_Controller {
 				$this->redirect('Both damage count and reason are required together', 'jobs/loaded-items', false);
 			}
 
+			if (!empty($post_arr['sale_count']) && !empty($post_arr['sale_price'])) {
+				$post_arr['type']= 'sales';
+			}
+			else if (!empty($post_arr['damage_count']) && !empty($post_arr['reason'])) {
+				$post_arr['type']= 'return';
+			}
+
+			
 			$this->Jobs_model->begin();
+			$post_arr['salesman_id']=log_user_id();
+			$ins_sale=$this->Jobs_model->insertPendingSale($post_arr,$id);
 			$update_sale=$this->Jobs_model->updateSale($post_arr,$id);
 
 
 
 			if ($update_sale) {
 				$reduce_stock=$this->Jobs_model->reduceItemcount($post_arr,$id);
-			
+
 			}
 
-	
+
 			
 			if ($update_sale && $reduce_stock) {
 				$this->Jobs_model->commit();

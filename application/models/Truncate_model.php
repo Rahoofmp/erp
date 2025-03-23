@@ -237,6 +237,7 @@ class Truncate_model extends Base_Model {
 		{
 			$this->db->truncate("purchase");
 		}   
+		
 		//V2 END
 
 

@@ -2259,14 +2259,14 @@ public function getPartyAuto($term='') {
     $this->db->from('party_details');
     if ($term) {
 
-       $this->db->where("name LIKE '$term%'");
+     $this->db->where("name LIKE '$term%'");
 
-   }
-   $this->db->limit(10);
-   $this->db->order_by('id','ASC');
-   $res = $this->db->get();
+ }
+ $this->db->limit(10);
+ $this->db->order_by('id','ASC');
+ $res = $this->db->get();
 
-   foreach($res->result_array() as $row) {
+ foreach($res->result_array() as $row) {
     $output[] = ['id'=>$row['id'], 
 
     'text' =>$row['name']  
@@ -2284,14 +2284,14 @@ public function getBarcodeAuto($term='') {
     $this->db->from('products');
     if ($term) {
 
-       $this->db->where("barcode LIKE '$term%'");
+     $this->db->where("barcode LIKE '$term%'");
 
-   }
-   $this->db->limit(10);
-   $this->db->order_by('id','ASC');
-   $res = $this->db->get();
+ }
+ $this->db->limit(10);
+ $this->db->order_by('id','ASC');
+ $res = $this->db->get();
 
-   foreach($res->result_array() as $row) {
+ foreach($res->result_array() as $row) {
     $output[] = ['id'=>$row['id'], 
 
     'text' =>$row['barcode']  
@@ -2501,16 +2501,26 @@ public function numberTowords($amount)
     return ($implode_to_Rupees ? $implode_to_Rupees . ' ' : '') . $get_paise;
 }
 
-public function updateWalletBalance($amount,$wallet='') {
-    if($wallet){
-        $this->db->set($wallet, $wallet.' + ' .$amount, FALSE);
+public function updateWalletBalance($amount, $wallet = '') {
+    if ($wallet) {
+        // Escape the column name to avoid SQL errors
+        $wallet_column = "`" . $this->db->escape_str($wallet) . "`";
+
+        // Determine whether to add or subtract
+        $operation = ($amount < 0) ? "-" : "+";
+
+        // Ensure absolute value is used correctly in SQL
+        $this->db->set($wallet_column, "$wallet_column $operation " . abs($amount), FALSE);
     }
 
-    $query = $this->db->set('wallet', 'wallet + ' . $amount, FALSE)
-    ->where('id', 1)
-    ->update('company_wallet');
+    // Apply the same logic for 'wallet' field
+    $operation_wallet = ($amount < 0) ? "-" : "+";
+    $this->db->set('wallet', "wallet $operation_wallet " . abs($amount), FALSE);
+
+    $query = $this->db->where('id', 1)->update('company_wallet');
     return $query;
 }
+
 
 public function getCompanyWallet($field_name= "wallet")
 {
