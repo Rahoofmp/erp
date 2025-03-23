@@ -56,7 +56,7 @@ class Jobs_model extends Base_model {
         $i = 1;
         foreach ($query->result_array() as $row) {
             $row['index'] = $search_arr['start'] + $i;
-            $product_details = $this->getProductDetails($row['products']);
+            $product_details = $this->getSalesProductDetails($row['products']);
             $row['product_name'] = $product_details['name'];
             $row['sale_rate'] = $product_details['sale_rate'];
             $row['mrp'] = $product_details['mrp'];
@@ -78,6 +78,24 @@ class Jobs_model extends Base_model {
         $this->db->select('*');
         $this->db->from("products");
         $this->db->where('id',$id);
+        $query = $this->db->get();
+
+        foreach ($query->result_array() as $row) 
+        {
+
+            $product_details=$row;
+        }
+
+        return $product_details;
+    }
+    public function getSalesProductDetails($id='') 
+    {
+        $product_details = array(); 
+        $this->db->select('pd.*');
+        $this->db->select('pr.mrp,pr.sale_rate');
+        $this->db->from("products as pd");
+        $this->db->join("purchase as pr","pr.product_id=pd.id");
+        $this->db->where('pd.id',$id);
         $query = $this->db->get();
 
         foreach ($query->result_array() as $row) 
