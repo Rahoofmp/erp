@@ -78,33 +78,6 @@
 													</div>
 												</div>
 											</div>
-
-
-
-										<!-- 	<div class="tab-pane p-3" id="change_username">
-												<div class="row"> 
-													<div class="col-md-12 mb-3">
-														<div class="form-group bmd-form-group">
-															<label class="bmd-label-floating">Damaged Count</label>
-															<input type="number" class="form-control" name="damage_count" value="">
-														</div>
-													</div>
-												</div>
-												
-												<div class="row">
-													<div class="col-md-12 mb-3">
-														<div class="form-group bmd-form-group">
-															<label class="bmd-label-floating">Reason:</label>
-															<input type="text" class="form-control" name="reason" value="">
-
-														</div>
-
-														
-
-													</div>
-													<div class="clearfix"></div>
-												</div>
-											</div>  -->
 										</div> 
 										
 									</div>
@@ -133,38 +106,16 @@
 					{form_open('','')}
 					<div class="form-body">
 						<div class="row">
-							<!-- <div class="col-md-3">
-								<div class="form-group">
-									<select id="packager" name="packager_id" class="packager_ajax form-control" >
-										{if $post_arr['packager_id']}
-										<option value="{$post_arr['packager_id']}">{$post_arr['packager_name']}</option>
-										{/if} 
-									</select> 
-								</div> 
-							</div> -->
-
-
 
 							<div class="col-md-3">
 								<div class="form-group">
-									<select id="products" name="product_id" class="item_name_ajax form-control select2">
-										{if $search_arr['product_id']}
-										<option value="{$search_arr['product_id']}" selected>{$search_arr['product_name']}</option>
+									<select id="source" name="job_id" class="job_id_ajax form-control select2">
+										{if $search_arr['job_id']}
+										<option value="{$search_arr['job_id']}" selected>{$search_arr['job_id']}</option>
 										{/if} 
 									</select>  
 								</div> 
 							</div>
-
-							<div class="col-md-3">
-								<div class="form-group">
-									<select id="category" name="category" class="category_name_ajax form-control select2">
-										{if $search_arr['category']}
-										<option value="{$search_arr['category']}" selected>{$search_arr['category_name']}</option>
-										{/if} 
-									</select>  
-								</div> 
-							</div>
-
 
 							<div class="col-md-2">
 								<div class="form-group row mb-2">
@@ -172,8 +123,8 @@
 									<div class="col-lg-9">
 										<select id="status" name="status" class="form-control">
 											<option value=''>--ALL--</option>
-											<option value="active" {if $search_arr['status']=='active'} selected {/if}>Active</option>
-											<option value="inactive" {if $search_arr['status']=='inactive'} selected {/if}>Inactive</option>
+											<option value="pending" {if $search_arr['status']=='pending'} selected {/if}>Pending</option>
+											<option value="approved" {if $search_arr['status']=='approved'} selected {/if}>Approved</option>
 										</select> 
 									</div>
 								</div>
@@ -182,7 +133,7 @@
 							
 
 							<div class="col-md-4"> 
-								<button type="submit" class="btn btn-primary" name="filter" value="filter">
+								<button type="submit" class="btn btn-primary" name="submit" value="filter">
 									<i class="fa fa-filter"></i> {lang('button_filter')}
 								</button>
 								<button type="submit" class="btn btn-warning mr-1" name="submit" value="reset">
@@ -218,10 +169,9 @@
 									<th>Item Name</th>
 									<th>Category</th>
 									<th>Stock</th>
+									<th>Sale Count</th>
 									<th>Sale Rate</th>
-									<th>MRP</th>
-									<th>Status</th>
-									<th class="text-center">{lang('action')}</th>   
+									<th>Status</th>  
 								</tr>
 							</thead> 
 						</table>
@@ -256,11 +206,11 @@
 		$(document).ready(function(){ 
 
 
-			$('.item_name_ajax').select2({
+			$('.job_id_ajax').select2({
 
-				placeholder: 'Select an Item',
+				placeholder: 'Select Bill Number',
 				ajax: {
-					url:'{base_url()}salesman/autocomplete/assigend_item_name_ajax',
+					url:'{base_url()}salesman/autocomplete/job_number_ajax',
 
 					type: 'post',
 					dataType: 'json',
@@ -273,26 +223,6 @@
 				},
 
 			});
-
-
-			$('.category_name_ajax').select2({
-
-				placeholder: 'Select a Category',
-				ajax: {
-					url:'{base_url()}salesman/autocomplete/assigend_category_ajax',
-
-					type: 'post',
-					dataType: 'json',
-					delay:250,
-					processResults: function(data) {
-						return {
-							results: data
-						};
-					}
-				},
-
-			});
-
 
 
 
@@ -325,12 +255,11 @@
 				}],
 
 				'ajax': {
-					'url':'{base_url()}salesman/jobs/get_assigned_item_ajax',
+					'url':'{base_url()}salesman/jobs/get_saled_items_ajax',
 					"type": "POST", 
 					"data" : {
 						
-						'category_id' : '{$search_arr['category']}',
-						'product_id' : '{$search_arr['product_id']}',
+						'job_id' : '{$search_arr['job_id']}',
 						'status' : '{$search_arr['status']}',
 						
 					}
@@ -344,17 +273,12 @@
 					{ data: 'barcode'},
 					{ data: 'product_name'},
 					{ data: 'category_name'},
-					{ data: 'saled_quantities'},
-					{ data: 'sale_rate'},
-					{ data: 'mrp'},
+					{ data: 'quantities'},
+					{ data: 'sale_count'},
+					{ data: 'sale_price'},
+				
 					{ data: 'status'},
-					{
-						mRender: function(data, type, row) {
-							var link = '<button type="button" class="btn-sm btn btn-info btn-link openModal" data-bs-toggle="modal" data-bs-target="#exampleModalPrimary" data-enc-id="' + row.enc_item_id + '" title="Edit"><i class="iconoir-edit-pencil" aria-hidden="true"></i></button>';
-							return link;
-
-
-						}}, 
+					
 					],
 
 

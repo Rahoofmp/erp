@@ -135,7 +135,7 @@
 									<th>Sale Price</th>
 									<th>Damage/Return</th>
 									<th>Added Date</th>
-									<th class="text-center">{lang('action')}</th>   
+									<!-- <th class="text-center">{lang('action')}</th>    -->
 								</tr>
 							</thead> 
 						</table>
@@ -240,12 +240,12 @@
 					{ data: 'sale_price'},
 					{ data: 'damage_count'},
 					{ data: 'purchase_date'},
-					{
-						mRender: function(data, type, row) {
-							var link = '<a href = "#" class="btn-sm btn btn-info btn-link" data-placement="top" title ="Edit" ><i class="iconoir-edit-pencil" aria-hidden="true"></i></a>';
+					// {
+					// 	mRender: function(data, type, row) {
+					// 		var link = '<a href = "#" class="btn-sm btn btn-info btn-link" data-placement="top" title ="Edit" ><i class="iconoir-edit-pencil" aria-hidden="true"></i></a>';
 
-							return link;
-						}}, 
+					// 		return link;
+					// 	}}, 
 					],
 
 

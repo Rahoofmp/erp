@@ -41,17 +41,18 @@ class Jobs extends Base_Controller {
 			$reduce_stock=false;
 
 			$post_arr = $this->input->post();
+
 			
 			$id=$this->Base_model->encrypt_decrypt('decrypt',$post_arr['enc_item_id']);
 			$item_details=$this->Jobs_model->getLoadeditemDetails($id);
 
-			if (empty($post_arr['sale_count']) && empty($post_arr['damage_count'])) {
+			if (empty($post_arr['sale_count'])) {
 
 				$this->redirect('Unavailable Action','jobs/loaded-items',False);
 			}
 
 			
-			if ($post_arr['sale_count'] > $item_details['quantities'] || $post_arr['damage_count'] > $item_details['quantities']) {
+			if ($post_arr['sale_count'] > $item_details['quantities']) {
 				$this->redirect('Invalid Count', 'jobs/loaded-items', false);
 			}
 
@@ -61,20 +62,11 @@ class Jobs extends Base_Controller {
 				$this->redirect('Both sale count and sale price are required together', 'jobs/loaded-items', false);
 			}
 
-			if ((!empty($post_arr['damage_count']) && empty($post_arr['reason'])) || 
-				(!empty($post_arr['reason']) && empty($post_arr['damage_count']))) 
-			{
-				$this->redirect('Both damage count and reason are required together', 'jobs/loaded-items', false);
-			}
 
 			if (!empty($post_arr['sale_count']) && !empty($post_arr['sale_price'])) {
 				$post_arr['type']= 'sales';
 			}
-			else if (!empty($post_arr['damage_count']) && !empty($post_arr['reason'])) {
-				$post_arr['type']= 'return';
-			}
 
-			
 			$this->Jobs_model->begin();
 			$post_arr['salesman_id']=log_user_id();
 			$ins_sale=$this->Jobs_model->insertPendingSale($post_arr,$id);
@@ -105,7 +97,7 @@ class Jobs extends Base_Controller {
 		$data['details'] = $details; 
 
 		// print_r($data);die();
-		$data['title'] = lang('customers_list'); 
+		$data['title'] = 'Loaded Items'; 
 		$this->loadView($data);
 	}
 	public function get_assigned_item_ajax() {
@@ -118,6 +110,7 @@ class Jobs extends Base_Controller {
 			$post_arr['salesman_id'] = log_user_id();
 
 			$details = $this->Jobs_model->getAllItemsAjax( $post_arr,'');
+
 			$response = array(
 				"draw" => intval($draw),
 				"iTotalRecords" => $count_without_filter,
@@ -129,18 +122,58 @@ class Jobs extends Base_Controller {
 		}
 	}
 
-	function customer_ajax() {
 
-		if ($this->input->is_ajax_request()) {
-			$post = $this->input->post();
-			// print_r($post);
-			// die();
-			$post['q'] = element('q', $post) ? $post['q'] : '';
-			$json = $this->Base_model->getCustomerIdAuto($post['q']);
-			echo json_encode($json);
+	function sales()
+	{ 
+
+		$details = $search_arr = $post_arr=[];
+		if( $this->input->post() )
+		{
+
+			if( $this->input->post('submit') == 'reset')
+			{
+				$search_arr = [];
+			}elseif( $this->input->post('submit') == 'filter'){
+				$post_arr = $this->input->post();
+
+				if(element('job_id',$post_arr)){
+
+					$search_arr['job_id'] = $post_arr['job_id'];
+				}
+
+				$search_arr['status'] = $post_arr['status'];
+			}
 		}
+
+
+		$data['search_arr'] = $search_arr; 
+		$data['details'] = $details; 
+
+		
+		$data['title'] = lang('Sales'); 
+		$this->loadView($data);
 	}
 
+	public function get_saled_items_ajax() {
+		if ($this->input->is_ajax_request()) {
+			$draw = $this->input->post('draw');
+			$post_arr = $this->input->post();
+			$post_arr['salesman_id'] = log_user_id();
+
+			$count_without_filter = $this->Jobs_model->getSalesCount(log_user_id());
+			$count_with_filter = $this->Jobs_model->getAllSalesAjax($post_arr, 1);
+			$details = $this->Jobs_model->getAllSalesAjax( $post_arr,'');
+
+			$response = array(
+				"draw" => intval($draw),
+				"iTotalRecords" => $count_without_filter,
+				"iTotalDisplayRecords" => $count_with_filter,
+				"aaData" => $details,
+			);
+
+			echo json_encode($response);
+		}
+	}
 
 
 

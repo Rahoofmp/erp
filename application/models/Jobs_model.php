@@ -194,8 +194,61 @@ class Jobs_model extends Base_model {
         return false; 
     }
 
+    public function getSalesCount($salesman_id='')
+    {
+        $this->db->select('*');
+        $this->db->from('job_details');
+        if($salesman_id)
+        {
+            $this->db->where('salesman_id',$salesman_id);
+        }
+        $count = $this->db->count_all_results();
+        return $count;
+    }
+
+    public function getAllSalesAjax($search_arr = [], $count = 0) {
+        $row = $search_arr['start'];
+        $rowperpage = $search_arr['length'];
+
+        $this->db->select('jb.id, jb.job_id, jb.salesman_id,jb.categories,jb.products,jb.sale_count,jb.sale_price,jb.quantities, ps.status');
+        $this->db->from('job_details jb');
+        $this->db->join("pending_sales as ps","ps.ref_id=jb.id");
+        $this->db->where('jb.salesman_id', log_user_id());
 
 
+        if ($job_id = element('job_id', $search_arr)) {
+            $this->db->where('jb.job_id', $job_id);
+        }
+
+        if ($status = element('status', $search_arr)) {
+            $this->db->where('ps.status', $status);
+        }
+        $this->db->group_by('ps.ref_id');
+        $this->db->order_by('jb.id', 'ASC');
+
+        if ($count) {
+            return $this->db->count_all_results();
+        }
+
+        $this->db->limit($rowperpage, $row);
+        $query = $this->db->get();
+
+        $details = [];
+        $i = 1;
+        foreach ($query->result_array() as $row) {
+            $row['index'] = $search_arr['start'] + $i;
+            $product_details = $this->getSalesProductDetails($row['products']);
+            $row['product_name'] = $product_details['name'];
+            $row['sale_rate'] = $product_details['sale_rate'];
+            $row['mrp'] = $product_details['mrp'];
+            $row['barcode'] = $product_details['barcode'];
+            $row['enc_item_id'] = $this->encrypt_decrypt('encrypt', $row['id']);
+            $row['category_name'] = $this->Base_model->getCategoryName($row['categories']);
+            $details[] = $row;
+            $i++;
+        }
+        return $details;
+    }
 
 
 

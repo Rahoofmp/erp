@@ -2259,14 +2259,14 @@ public function getPartyAuto($term='') {
     $this->db->from('party_details');
     if ($term) {
 
-     $this->db->where("name LIKE '$term%'");
+       $this->db->where("name LIKE '$term%'");
 
- }
- $this->db->limit(10);
- $this->db->order_by('id','ASC');
- $res = $this->db->get();
+   }
+   $this->db->limit(10);
+   $this->db->order_by('id','ASC');
+   $res = $this->db->get();
 
- foreach($res->result_array() as $row) {
+   foreach($res->result_array() as $row) {
     $output[] = ['id'=>$row['id'], 
 
     'text' =>$row['name']  
@@ -2284,14 +2284,14 @@ public function getBarcodeAuto($term='') {
     $this->db->from('products');
     if ($term) {
 
-     $this->db->where("barcode LIKE '$term%'");
+       $this->db->where("barcode LIKE '$term%'");
 
- }
- $this->db->limit(10);
- $this->db->order_by('id','ASC');
- $res = $this->db->get();
+   }
+   $this->db->limit(10);
+   $this->db->order_by('id','ASC');
+   $res = $this->db->get();
 
- foreach($res->result_array() as $row) {
+   foreach($res->result_array() as $row) {
     $output[] = ['id'=>$row['id'], 
 
     'text' =>$row['barcode']  
@@ -2569,6 +2569,34 @@ public function getJobs($term = '') {
     $this->db->select('*');
     $this->db->from('job_details');
     $this->db->where('status', 'active');
+
+    if (!empty($term)) {
+        $this->db->like('job_id', $term, 'after');
+    }
+
+    $this->db->group_by('job_id'); 
+    $this->db->limit(10);
+    $this->db->order_by('job_id', 'ASC');
+
+    $res = $this->db->get();
+
+    foreach ($res->result_array() as $row) {
+        $output[] = [
+            'id'   => $row['job_id'],
+            'text' => $row['job_id'] 
+        ];
+    }
+
+    return $output;
+}
+
+public function getJobsSalesman($term = '') {
+    $output = [];
+
+    $this->db->select('*');
+    $this->db->from('job_details');
+    $this->db->where('status', 'active');
+    $this->db->where('salesman_id', log_user_id());
 
     if (!empty($term)) {
         $this->db->like('job_id', $term, 'after');
