@@ -82,7 +82,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
+						{* <div class="col-md-6">
 							<div class="form-group row mb-2">
 								<label for="txtEmail" class="col-lg-3 col-form-label">Under Group:</label>
 								<div class="col-lg-9">
@@ -93,7 +93,7 @@
 
 								</div>
 							</div>
-						</div>
+						</div> *}
 
 						{if $enc_id}
 						<div class="form-group">

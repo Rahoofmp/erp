@@ -75,7 +75,15 @@
 											</div>
 										</div>
 									</div>
-
+									<div class="col-md-6">
+										<div class="form-group row mb-2">
+											<label for="txtName" class="col-lg-3 col-form-label"> Sales Rate :</label>
+											<div class="col-lg-9">
+												<input type="text" id="sales_rate"  class="form-control" name ="sales_rate" value="{$item_details['sales_rate']}"  required="">
+												{form_error('sales_rate')}
+											</div>
+										</div>
+									</div>
 
 									
 

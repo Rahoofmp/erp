@@ -679,6 +679,7 @@ public function validate_add_item()
 	$this->form_validation->set_rules('name','Product Name','trim|required');
 	$this->form_validation->set_rules('type','Open Balance','trim|required');
 	$this->form_validation->set_rules('category','Category','trim|required');
+	$this->form_validation->set_rules('sales_rate','Sales Rate','trim|required');
 
 		// $this->form_validation->set_rules('as_date','Date','trim|required');
 	$result = $this->form_validation->run();

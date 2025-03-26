@@ -156,7 +156,7 @@ public function addNewVehicle($post_arr){
     $this->db->set('open_bal',$post_arr['open_bal']);
     $this->db->set('res_pay',$post_arr['res_pay']);
     $this->db->set('as_date',$post_arr['as_date']);
-    $this->db->set('under_group',$post_arr['under_group']);
+    // $this->db->set('under_group',$post_arr['under_group']);
     $this->db->set('created_date',$submit_date);
     $this->db->set('status','active');
     $result = $this->db->insert('vehicles');
@@ -551,6 +551,7 @@ public function addNewItem($post_arr){
     $this->db->set('name',$post_arr['name']);
     $this->db->set('type',$post_arr['type']);
     $this->db->set('category',$post_arr['category']);
+    $this->db->set('sales_rate',$post_arr['sales_rate']);
     // $this->db->set('as_date',$post_arr['as_date']);
     $this->db->set('created_date',$submit_date);
     $this->db->set('status','active');

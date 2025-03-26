@@ -73,6 +73,21 @@
 						</div><!--end col-->
 						<div class="col-md-6">
 							<div class="form-group row mb-2">
+								<label for="txtEmail" class="col-lg-3 col-form-label">Email :</label>
+								<div class="col-lg-9">
+									<input id="txtEmail" name="email" type="email" class="form-control" value="{$party_details['email']}" required="">
+									{form_error('email')}
+									<div class="invalid-feedback">Enter Email
+
+									</div>
+								</div>
+							</div><!--end form-group-->
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group row mb-2">
 								<label for="txtPtype" class="col-lg-3 col-form-label">Party Type :</label>
 								<div class="col-lg-9">
 									<select id="txtPtype" name="party_type" class="form-control" required>
@@ -82,8 +97,9 @@
 									<div class="invalid-feedback">Select Party Type</div>
 								</div>
 							</div><!--end form-group-->
+						</div><!--end form-group-->
 
-
+						<div class="col-md-6">
 							<div class="form-group row mb-2">
 								<label for="txtVehicle" class="col-lg-3 col-form-label">Vehicle Group :</label>
 								<div class="col-lg-9">
@@ -99,8 +115,6 @@
 
 
 						</div>
-					</div>
-					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group row mb-2">
 								<label for="txtMobile" class="col-lg-3 col-form-label">Opening Bal :</label>
@@ -149,18 +163,7 @@
 								</div>
 							</div><!--end form-group-->
 						</div><!--end col-->
-						<div class="col-md-6">
-							<div class="form-group row mb-2">
-								<label for="txtEmail" class="col-lg-3 col-form-label">Email :</label>
-								<div class="col-lg-9">
-									<input id="txtEmail" name="email" type="email" class="form-control" value="{$party_details['email']}" required="">
-									{form_error('email')}
-									<div class="invalid-feedback">Enter Email
-
-									</div>
-								</div>
-							</div><!--end form-group-->
-						</div><!--end col-->
+						<!--end col-->
 					</div><!--end row-->
 
 
