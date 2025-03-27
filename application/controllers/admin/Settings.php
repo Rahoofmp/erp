@@ -407,14 +407,18 @@ class Settings extends Base_Controller {
 		}
 
 		if ($this->input->post('purchase')) {
+
 			$post_arr = $this->input->post();
 
+			
 			foreach ($post_arr['products'] as $product) {
 				if (empty($product['product_id']) || 
-					empty($product['category_id']) || 
+					// empty($product['category_id']) || 
+					empty($product['party_id']) || 
 					empty($product['quantity']) || 
 					empty($product['purchase_rate']) || 
-					empty($product['sale_rate']) || 
+					empty($product['tax']) || 
+					// empty($product['sale_rate']) || 
 					empty($product['mrp'])) {
 
 					$this->redirect('Error: All product fields are required!', 'settings/purchase', FALSE);
