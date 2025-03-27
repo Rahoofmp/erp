@@ -46,6 +46,7 @@ class Jobs extends Base_Controller {
 			$id=$this->Base_model->encrypt_decrypt('decrypt',$post_arr['enc_item_id']);
 			$item_details=$this->Jobs_model->getLoadeditemDetails($id);
 
+
 			if (empty($post_arr['sale_count'])) {
 
 				$this->redirect('Unavailable Action','jobs/loaded-items',False);

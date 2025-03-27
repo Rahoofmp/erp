@@ -107,6 +107,7 @@
 					<div class="col-md-2"><span class="total-tax">0.00</span></div>
 					<div class="col-md-2"><span class="total-purchase-rate">0.00</span></div>
 					<div class="col-md-2"><span class="total-mrp">0.00</span></div>
+					<div class="col-md-2"><span class="grand-total">0.00</span></div>
 					</div>
 					`);
 			}
@@ -209,7 +210,7 @@
 			</div>
 			<div class="col-md-2">
 			<label>TAX:</label>
-			<input type="number" name="products[` + uniqueIndex + `][tax]" class="tax form-control" min="1" required>
+			<input type="text" name="products[` + uniqueIndex + `][tax]" class="tax form-control" min="1" required>
 			</div>
 			<div class="col-md-2">
 			<label>Purchase Rate:</label>
@@ -253,6 +254,8 @@
 		let totalMRP = 0;
 		let totalTax = 0;
 		let totalPurchaseRate = 0;
+		let Total = 0;
+		let grandTotal = 0;
 
 		$(".product-row").each(function () {
 			let mrp = parseFloat($(this).find(".mrp").val()) || 0;
@@ -262,11 +265,14 @@
 			totalMRP += mrp;
 			totalTax += tax;
 			totalPurchaseRate += purchaseRate;
+			Total= purchaseRate+tax;
+			grandTotal += Total;
 		});
 
 		$(".total-mrp").text(totalMRP.toFixed(2));
 		$(".total-tax").text(totalTax.toFixed(2));
 		$(".total-purchase-rate").text(totalPurchaseRate.toFixed(2));
+		$(".grand-total").text(grandTotal.toFixed(2));
 
 
 		if ($(".product-row").length === 0) {

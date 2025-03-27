@@ -2259,14 +2259,14 @@ public function getPartyAuto($term='') {
     $this->db->from('party_details');
     if ($term) {
 
-       $this->db->where("name LIKE '$term%'");
+     $this->db->where("name LIKE '$term%'");
 
-   }
-   $this->db->limit(10);
-   $this->db->order_by('id','ASC');
-   $res = $this->db->get();
+ }
+ $this->db->limit(10);
+ $this->db->order_by('id','ASC');
+ $res = $this->db->get();
 
-   foreach($res->result_array() as $row) {
+ foreach($res->result_array() as $row) {
     $output[] = ['id'=>$row['id'], 
 
     'text' =>$row['name']  
@@ -2284,14 +2284,14 @@ public function getBarcodeAuto($term='') {
     $this->db->from('products');
     if ($term) {
 
-       $this->db->where("barcode LIKE '$term%'");
+     $this->db->where("barcode LIKE '$term%'");
 
-   }
-   $this->db->limit(10);
-   $this->db->order_by('id','ASC');
-   $res = $this->db->get();
+ }
+ $this->db->limit(10);
+ $this->db->order_by('id','ASC');
+ $res = $this->db->get();
 
-   foreach($res->result_array() as $row) {
+ foreach($res->result_array() as $row) {
     $output[] = ['id'=>$row['id'], 
 
     'text' =>$row['barcode']  
@@ -2413,6 +2413,7 @@ public function getProductName($id)
 public function getAssignedItemAuto($term = '') {
     $output = [];
     
+    $this->db->distinct();
     $this->db->select('p.id, p.name');
     $this->db->from('job_details jd');
     $this->db->join('products p', 'FIND_IN_SET(p.id, jd.products) > 0', 'inner');
@@ -2447,6 +2448,7 @@ public function getAssignedCategoryAuto($term = '') {
         $this->db->like("c.category_name", $term, "after");
     }
 
+    $this->db->group_by('c.id'); 
     $this->db->limit(10);
     $this->db->order_by('c.id', 'ASC');
 
@@ -2458,6 +2460,7 @@ public function getAssignedCategoryAuto($term = '') {
 
     return $output;
 }
+
 public function numberTowords($amount)
 {
     if(empty($amount))
@@ -2616,6 +2619,38 @@ public function getJobsSalesman($term = '') {
     }
 
     return $output;
+}
+
+public function categoryIdFromProduct($product_id){
+
+
+    $category_id = NULL;
+    $this->db->select('category');
+    $this->db->from('products');
+    $this->db->where('id', $product_id);
+    $this->db->limit(1);
+    $query = $this->db->get();
+    foreach ($query->result_array() as $row) {
+        $category_id = $row['category'];
+    }
+
+    return $category_id;
+}
+
+public function getSaleRate($product_id){
+
+
+    $sale_rate = NULL;
+    $this->db->select('sales_rate');
+    $this->db->from('products');
+    $this->db->where('id', $product_id);
+    $this->db->limit(1);
+    $query = $this->db->get();
+    foreach ($query->result_array() as $row) {
+        $sale_rate = $row['sales_rate'];
+    }
+
+    return $sale_rate;
 }
 
 

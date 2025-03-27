@@ -623,7 +623,7 @@ public function addPurchaseProducts($post_arr){
     $data = [
         'bill_number'      => $post_arr['bill_number'],
         'product_id'      => $product['product_id'],
-        // 'category_id'     => $product['category_id'],
+        'category_id'     => $product['category_id'],
         'purchase_rate'   => $product['purchase_rate'],
         'party_id'   => $product['party_id'],
         'invoice_number'   => $post_arr['invoice_number'],
@@ -687,6 +687,7 @@ public function getAllPurchaseAjax( $search_arr =[],$count = 0)
         $row['enc_item_id']=$this->encrypt_decrypt('encrypt',$row['id']);
         $row['category_name']=$this->Base_model->getCategoryName($row['category_id']);
         $row['product_name']=$this->Base_model->getProductName($row['product_id']);
+        $row['sale_rate']=$this->Base_model->getSaleRate($row['product_id']);
         $row['purchase_date'] = $row['date_created'];
         $details[] = $row;
         $i++;

@@ -57,8 +57,9 @@ class Jobs_model extends Base_model {
         foreach ($query->result_array() as $row) {
             $row['index'] = $search_arr['start'] + $i;
             $product_details = $this->getSalesProductDetails($row['products']);
+
             $row['product_name'] = $product_details['name'];
-            $row['sale_rate'] = $product_details['sale_rate'];
+            $row['sale_rate'] = $product_details['sales_rate'];
             $row['mrp'] = $product_details['mrp'];
             $row['barcode'] = $product_details['barcode'];
             $row['enc_item_id'] = $this->encrypt_decrypt('encrypt', $row['id']);
@@ -239,7 +240,7 @@ class Jobs_model extends Base_model {
             $row['index'] = $search_arr['start'] + $i;
             $product_details = $this->getSalesProductDetails($row['products']);
             $row['product_name'] = $product_details['name'];
-            $row['sale_rate'] = $product_details['sale_rate'];
+            $row['sale_rate'] = $product_details['sales_rate'];
             $row['mrp'] = $product_details['mrp'];
             $row['barcode'] = $product_details['barcode'];
             $row['enc_item_id'] = $this->encrypt_decrypt('encrypt', $row['id']);

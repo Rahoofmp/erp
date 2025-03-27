@@ -410,15 +410,16 @@ class Settings extends Base_Controller {
 
 			$post_arr = $this->input->post();
 
-			
-			foreach ($post_arr['products'] as $product) {
+			foreach ($post_arr['products'] as $index => $product) { 
+
+				$post_arr['products'][$index]['category_id'] = $this->Base_model->categoryIdFromProduct($product['product_id']);
+
 				if (empty($product['product_id']) || 
-					// empty($product['category_id']) || 
+					empty($post_arr['products'][$index]['category_id']) || 
 					empty($product['party_id']) || 
 					empty($product['quantity']) || 
 					empty($product['purchase_rate']) || 
 					empty($product['tax']) || 
-					// empty($product['sale_rate']) || 
 					empty($product['mrp'])) {
 
 					$this->redirect('Error: All product fields are required!', 'settings/purchase', FALSE);
@@ -432,8 +433,6 @@ class Settings extends Base_Controller {
 
 		$bill_number = $this->Settings_model->generateBillNumber($post_arr['as_date']); 
 		$post_arr['bill_number'] = $bill_number; 
-
-
 
 		$purchase = $this->Settings_model->addPurchaseProducts($post_arr);
 
