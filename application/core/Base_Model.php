@@ -2252,11 +2252,12 @@ class Base_Model extends CI_Model
 }
 
 
-public function getPartyAuto($term='') {
+public function getPurchasePartyAuto($term='') {
 
     $output = [];
     $this->db->select('id,name');
     $this->db->from('party_details');
+    $this->db->where('type',2);
     if ($term) {
 
      $this->db->where("name LIKE '$term%'");

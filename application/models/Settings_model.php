@@ -92,10 +92,10 @@ class Settings_model extends Base_model {
 
         $query = $this->db->get();
         foreach($query->result_array() as $row)
-           $details[]=$row;
-       return $details;
-   }
-   public function getDepartmentID($department_name='') {
+         $details[]=$row;
+     return $details;
+ }
+ public function getDepartmentID($department_name='') {
     $id = array();
     $this->db->select('dep_id');
     $this->db->from('department');
@@ -617,8 +617,12 @@ public function generateBillNumber($as_date) {
 
 public function addPurchaseProducts($post_arr){
 
-   foreach ($post_arr['products'] as $product) {
+ foreach ($post_arr['products'] as $product) {
     $purchase=false;
+
+    if ($product['party_id']=='null') {
+        $product['party_id']=$post_arr['party_id'];
+    }
 
     $data = [
         'bill_number'      => $post_arr['bill_number'],

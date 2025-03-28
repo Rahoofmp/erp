@@ -66,7 +66,7 @@
 						</div>
 					</div>
 				</div>
-				<button type="button" class="btn btn-primary add-row">Add Item</button>
+				<!-- <button type="button" class="btn btn-primary add-row">Add Item</button> -->
 			</div>
 		</div>
 	</div>
@@ -78,7 +78,7 @@
 			<div class="card-body pt-0">
 				<div class="product-container"></div>
 				<div class="product-total"></div>
-				<button type="submit" class="btn btn-success submit-job float-end mt-3" name="purchase" value="purchase">Purchase</button>
+				<button type="submit" class="btn btn-success submit-job float-end mt-3" id="purchase-button" name="purchase" value="purchase">Purchase</button>
 			</div>
 		</div>
 	</div>
@@ -109,7 +109,7 @@
 					<div class="col-md-2"><span class="total-mrp">0.00</span></div>
 					<div class="col-md-2"><span class="grand-total">0.00</span></div>
 					</div>
-					`);
+				`);
 			}
 
 		}
@@ -122,7 +122,7 @@
 
 			placeholder: 'Select a Party',
 			ajax: {
-				url:'{base_url()}admin/autocomplete/party_ajax',
+				url:'{base_url()}admin/autocomplete/party_purchase_ajax',
 
 				type: 'post',
 				dataType: 'json',
@@ -179,172 +179,160 @@
 			return $('.product-row').length;
 		}
 
-		$('.add-row').click(function () {
+		function addNewRow() {
 			var uniqueIndex = getUniqueIndex();
-
-			var category_id = $('.category_name_ajax').val();
 			var party_id = $('.party_ajax').val();
-			// alert(party_id);
-
-			// if (!category_id) {
-			// 	executeExample('error', 'Invalid Action', 'Please select a category before adding an item!');
-			// 	return;
-			// }
-
-			if (!party_id) {
-				executeExample('error', 'Invalid Action', 'Please select a Party before adding an item!');
-				return;
-			}
 
 			var newRow = `
-			<div class="row product-row mt-2">
-			<div class="col-md-2">
-			<label>Item:</label>
-			<select name="products[` + uniqueIndex + `][product_id]" class="item-select form-control select2"></select>
-			</div>
+        <div class="row product-row mt-2">
+            <div class="col-md-2">
+                <label>Item:</label>
+				<select name="products[` + uniqueIndex + `][product_id]" class="item-select form-control select2"></select>
+            </div>
+            <div class="col-md-2">
+                <label>Quantity:</label>
+				<input type="hidden" name="products[` + uniqueIndex + `][party_id]" class="party_id" value="`+ party_id +`">
+				<input type="number" name="products[` + uniqueIndex + `][quantity]" class="quantity form-control" min="1" required>
+            </div>
+            <div class="col-md-2">
+                <label>TAX:</label>
+				<input type="text" name="products[` + uniqueIndex + `][tax]" class="tax form-control" min="1" required>
+            </div>
+            <div class="col-md-2">
+                <label>Purchase Rate:</label>
+				<input type="number" name="products[` + uniqueIndex + `][purchase_rate]" class="purchase_rate form-control" min="1" required>
+            </div>
+            <div class="col-md-2">
+                <label>MRP:</label>
+				<input type="number" name="products[` + uniqueIndex + `][mrp]" class="mrp form-control" min="1" required>
+            </div>
+            <div class="col-md-1">
+                <label>Remove:</label><br>
+                <button type="button" class="btn btn-danger remove-row">X</button>
+               
+            </div>
+            <div class="col-md-1">
+                <label>Add:</label><br>
+                 <button type="button" class="btn btn-primary add-row">+</button>
 
-			<div class="col-md-2">
-			<label>Quantity:</label>
-			<input type="hidden" name="products[` + uniqueIndex + `][party_id]" class="party_id" value="`+ party_id +`">
-			<input type="number" name="products[` + uniqueIndex + `][quantity]" class="quantity form-control" min="1" required>
-			</div>
-			<div class="col-md-2">
-			<label>TAX:</label>
-			<input type="text" name="products[` + uniqueIndex + `][tax]" class="tax form-control" min="1" required>
-			</div>
-			<div class="col-md-2">
-			<label>Purchase Rate:</label>
-			<input type="number" name="products[` + uniqueIndex + `][purchase_rate]" class="purchase_rate form-control" min="1" required>
-			</div>
+            </div>
+				</div>`;
+				$('.product-container').append(newRow);
+				initItemSelect();
+				addTotalRow();
+				updateTotals();
+			}
 
 
-			<div class="col-md-2">
-			<label>MRP:</label>
-			<input type="number" name="products[` + uniqueIndex + `][mrp]" class="mrp form-control" min="1" required>
-			</div>
+			addNewRow();
 
-			<div class="col-md-1">
-			<label>Remove:</label>
-			<button type="button" class="btn btn-danger remove-row">X</button>
-			</div>
-			</div>`;
-			$('.product-container').append(newRow);
-			initItemSelect();
+			$(document).on("click", ".add-row", function () {
+				addNewRow();
+			});
 
-			addTotalRow();
-			updateTotals();
+			$(document).on("click", ".remove-row", function () {
+				$(this).closest(".product-row").remove();
+				updateTotals();
+				if ($(".product-row").length === 0) {
+					addNewRow();
+				}
+			});
+
+			$("#purchase-button").click(function () {
+				var party_id = $(".party_ajax").val();
+			
+				if (!party_id) {
+					executeExample('error', 'Invalid Action', 'Please select a Party before making a purchase!');
+					return false;
+				}
+			});
+
+
 
 		});
 
+
+
+
+function updateTotals() {
+	let totalMRP = 0;
+	let totalTax = 0;
+	let totalPurchaseRate = 0;
+	let Total = 0;
+	let grandTotal = 0;
+
+	$(".product-row").each(function () {
+		let mrp = parseFloat($(this).find(".mrp").val()) || 0;
+		let tax = parseFloat($(this).find(".tax").val()) || 0;
+		let purchaseRate = parseFloat($(this).find(".purchase_rate").val()) || 0;
+
+		totalMRP += mrp;
+		totalTax += tax;
+		totalPurchaseRate += purchaseRate;
+		Total= purchaseRate+tax;
+		grandTotal += Total;
 	});
 
+	$(".total-mrp").text(totalMRP.toFixed(2));
+	$(".total-tax").text(totalTax.toFixed(2));
+	$(".total-purchase-rate").text(totalPurchaseRate.toFixed(2));
+	$(".grand-total").text(grandTotal.toFixed(2));
 
 
-
-
-	$(document).on("click", ".remove-row", function () {
-		$(this).closest(".product-row").remove();
-		updateTotals();
-
-		if ($(".product-row").length === 0) {
-			$(".total-row").remove();
-		}
-	});
-	function updateTotals() {
-		let totalMRP = 0;
-		let totalTax = 0;
-		let totalPurchaseRate = 0;
-		let Total = 0;
-		let grandTotal = 0;
-
-		$(".product-row").each(function () {
-			let mrp = parseFloat($(this).find(".mrp").val()) || 0;
-			let tax = parseFloat($(this).find(".tax").val()) || 0;
-			let purchaseRate = parseFloat($(this).find(".purchase_rate").val()) || 0;
-
-			totalMRP += mrp;
-			totalTax += tax;
-			totalPurchaseRate += purchaseRate;
-			Total= purchaseRate+tax;
-			grandTotal += Total;
-		});
-
-		$(".total-mrp").text(totalMRP.toFixed(2));
-		$(".total-tax").text(totalTax.toFixed(2));
-		$(".total-purchase-rate").text(totalPurchaseRate.toFixed(2));
-		$(".grand-total").text(grandTotal.toFixed(2));
-
-
-		if ($(".product-row").length === 0) {
-			$(".total-row").remove();
-		}
+	if ($(".product-row").length === 0) {
+		$(".total-row").remove();
 	}
+}
 
-	$(document).on('change', '.item-select', function() {
-		var row = $(this).closest('.product-row');
-		$.ajax({
-			url: '{base_url()}admin/settings/get_category_ajax',
-			type: "POST",
-			data: { category_id: $('.category_name_ajax').val() },
-			dataType: "json",
-			success: function(response) {
-				if (response.status == "success") {
-					row.find('.category_id').val(response.details.id);
-					row.find('.category_name').val(response.details.category_name);
+$(document).on('change', '.item-select', function() {
+	var row = $(this).closest('.product-row');
+	$.ajax({
+		url: '{base_url()}admin/settings/get_category_ajax',
+		type: "POST",
+		data: { category_id: $('.category_name_ajax').val() },
+		dataType: "json",
+		success: function(response) {
+			if (response.status == "success") {
+				row.find('.category_id').val(response.details.id);
+				row.find('.category_name').val(response.details.category_name);
 			// row.find('.tax').val(response.details.tax);
-		} else {
-			alert("Error fetching category details.");
+			} else {
+				alert("Error fetching category details.");
+			}
 		}
+	});
+});
+
+(function () {
+	'use strict'
+	var forms = document.querySelectorAll('.needs-validation')
+	Array.prototype.slice.call(forms)
+	.forEach(function (form) {
+		form.addEventListener('submit', function (event) {
+			if (!form.checkValidity()) {
+				event.preventDefault()
+				event.stopPropagation()
+			}
+
+			form.classList.add('was-validated')
+		}, false)
+	})
+})()
+$(document).on('click', '.submit-job', function(e) {
+	var isValid = true; 
+	$('.product-container .item-select').each(function() {
+		if (!$(this).val()) { 
+			isValid = false;
+			return false; 
+		}
+	});
+	if (!isValid) {
+		e.preventDefault(); 
+		executeExample('error', 'Invalid Submission', 'Please select an item before purchasing!');
+		return;
 	}
 });
-	});
 
-	(function () {
-		'use strict'
-		var forms = document.querySelectorAll('.needs-validation')
-		Array.prototype.slice.call(forms)
-		.forEach(function (form) {
-			form.addEventListener('submit', function (event) {
-				if (!form.checkValidity()) {
-					event.preventDefault()
-					event.stopPropagation()
-				}
-
-				form.classList.add('was-validated')
-			}, false)
-		})
-	})()
-	$(document).on('click', '.submit-job', function(e) {
-		var isValid = true; 
-		$('.product-container .item-select').each(function() {
-			if (!$(this).val()) { 
-				isValid = false;
-				return false; 
-			}
-		});
-		if (!isValid) {
-			e.preventDefault(); 
-			executeExample('error', 'Invalid Submission', 'Please select an item before purchasing!');
-			return;
-		}
-	});
-	$(document).ready(function() {
-		$('.submit-job').prop('disabled', true); 
-
-		$(document).on('click', '.add-row', function() {
-			if ($('.product-container .item-select').length > 0) {
-				$('.submit-job').prop('disabled', false); 
-			}
-		});
-
-		$(document).on('click', '.remove-item', function() {
-			$(this).closest('.item-row').remove(); 
-
-			if ($('.product-container .item-select').length === 0) {
-				$('.submit-job').prop('disabled', true); 
-			}
-		});
-	});
 
 </script>
 {/block}
