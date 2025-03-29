@@ -556,8 +556,12 @@ function sales($enc_id='')
 
 		$post_arr = $this->input->post();
 
+		$this->load->model("Salesman_model");
 
-		foreach ($post_arr['products'] as $index => $product) { 
+
+		$this->Salesman_model->begin();
+		foreach ($post_arr['products'] as $index => $product) 
+		{ 
 
 			$post_arr['products'][$index]['category_id'] = $this->Base_model->categoryIdFromProduct($product['product_id']);
 
@@ -566,43 +570,37 @@ function sales($enc_id='')
 				empty($product['party_id']) || 
 				empty($product['quantity']) || 
 				empty($product['sale_rate']) || 
-				empty($product['tax'])) {
+				empty($product['tax'])) 
+			{
 
 				$this->redirect('Error: All product fields are required!', 'settings/sales', FALSE);
-			return;
+				return;
+			}
+
+
+			$this->Settings_model->ChageProductFieldSales($product);
+
+			$job_number = $this->Salesman_model->generateJobNumber($post_arr['as_date']); 
+
+			$post_arr['job_number'] = $job_number;
+			$post_arr['vehicle_id']=0;
+			$post_arr['sales_man_id']=log_user_id();
+
+			$ins=$this->Salesman_model->addJobDetails($post_arr);
+			if($ins){
+
+				$this->Salesman_model->commit();
+				$this->Base_model->insertIntoActivityHistory(log_user_id(), $post_arr['sales_man_id'],'Job created', serialize($post_arr));		
+				$this->redirect('Sales Added Successfully', 'settings/sales', TRUE);
+			} else {
+				$this->Salesman_model->roll_back();
+				$this->redirect('Error on Adding Sales', 'settings/sales', FALSE);
+			}
 		}
-
-
-		$this->Settings_model->ChageProductFieldSales($product);
-
 	}
-
-
-	$this->Settings_model->begin();
-
-
-	$bill_number = $this->Settings_model->generateBillNumber($post_arr['as_date']); 
-	$post_arr['bill_number'] = $bill_number; 
-
-	$purchase = $this->Settings_model->addPurchaseProducts($post_arr);
-
-
-	if ($purchase) {
-		$this->Settings_model->commit();
-		$this->redirect('Purchase Added Successfully', 'settings/purchase', TRUE);
-	} else {
-		$this->redirect('Error on purchasing', 'settings/purchase', FALSE);
-	}
+	$data['title'] = 'Sales';
+	$this->loadView($data);
 }
-
-$data['title'] = 'Purchase';
-$this->loadView($data);
-}
-
-
-
-
-
 public function get_product_stock_ajax() {
 	$product_id = $this->input->post('product_id');
 	$stock = $this->Settings_model->getTotalProductCount($product_id);

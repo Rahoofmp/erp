@@ -723,8 +723,7 @@ public function ChageProductFieldSales($product)
     $this->db->set('date_modified',$date);
     $this->db->where('id',$product['product_id']);
     $result=$this->db->update("products");
-    print_r($result);
-    die();
+
     return $result;
 }
 
