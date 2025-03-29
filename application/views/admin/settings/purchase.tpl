@@ -122,7 +122,7 @@
 
 			placeholder: 'Select a Party',
 			ajax: {
-				url:'{base_url()}admin/autocomplete/party_purchase_ajax',
+				url:'{base_url()}admin/autocomplete/party_ajax',
 
 				type: 'post',
 				dataType: 'json',

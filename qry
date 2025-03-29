@@ -50,3 +50,4 @@ INSERT INTO `menu` (`id`, `en`, `parent_id`, `link`, `icon`, `status`, `perm_adm
 
 
 
+INSERT INTO `menu` (`id`, `en`, `parent_id`, `link`, `icon`, `status`, `perm_admin`, `perm_customer`, `perm_store_keeper`, `perm_packager`, `perm_sub-admin`, `perm_dept_sub-admin`, `perm_pre_user`, `perm_user`, `perm_salesman`, `order`, `target`, `type`, `perm_designer`, `perm_purchaser`) VALUES (NULL, 'Company Sale', '#', 'settings/sales', 'iconoir-apple-shortcuts', '1', '1', '0', '0', '0', '1', '0', '0', '0', '0', '3', NULL, 'site', '1', '1')

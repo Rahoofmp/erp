@@ -61,7 +61,7 @@
 		<div class="card">
 			<div class="card-body pt-0">
 				<div class="product-container"></div>
-				<button type="submit" class="btn btn-success submit-job float-end mt-3" name="add_job" value="add_job">Submit Job</button>
+				<button type="submit" id="add-job" class="btn btn-success submit-job float-end mt-3" name="add_job" value="add_job">Submit Job</button>
 			</div>
 		</div>
 	</div>
@@ -134,11 +134,11 @@
 			return $('.product-row').length;
 		}
 
-		$('.add-row').click(function () {
+		$(document).on("click", ".add-row", function () {
 			var uniqueIndex = getUniqueIndex();
 			var newRow = `
         <div class="row product-row mt-2">
-            <div class="col-md-5">
+            <div class="col-md-3">
                 <label>Item:</label>
 				<select name="products[` + uniqueIndex + `][product_id]" class="item-select form-control select2"></select>
             </div>
@@ -155,8 +155,16 @@
                 <label>Quantity:</label>
 				<input type="number" name="products[` + uniqueIndex + `][quantity]" class="quantity form-control" min="1">
             </div>
+
+			<div class="col-md-1">
+                <label>Remove:</label><br>
+                <button type="button" class="btn btn-danger remove-row">X</button>
+
+            </div>
             <div class="col-md-1">
-                <button type="button" class="btn btn-danger remove-row mt-sm-3">X</button>
+                 <label>Add:</label><br>
+                 <button type="button" class="btn btn-primary add-row">+</button>
+
             </div>
 				</div>`;
 				$('.product-container').append(newRow);
@@ -197,7 +205,14 @@
 		});
 
 
-
+		$("#add-job").click(function () {
+			var party_id = $(".vehicle_name_ajax").val();
+			
+			if (!party_id) {
+				executeExample('error', 'Invalid Action', 'Please select a Vehicle before assigning  products!');
+				return false;
+			}
+		});
 
 
 	});

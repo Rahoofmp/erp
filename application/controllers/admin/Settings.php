@@ -425,6 +425,8 @@ class Settings extends Base_Controller {
 					$this->redirect('Error: All product fields are required!', 'settings/purchase', FALSE);
 				return;
 			}
+
+			// $purchase_rate=$this->Base_model->getItemfield('purchase_rate',$item_id);
 		}
 
 

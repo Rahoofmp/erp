@@ -425,13 +425,13 @@ class Autocomplete extends Base_Controller {
 
 
 
-	function party_purchase_ajax() {
+	function party_ajax() {
 
 		if ($this->input->is_ajax_request()) {
 			$post = $this->input->post();
 			
 			$post['q'] = element('q', $post) ? $post['q'] : '';
-			$json = $this->Base_model->getPurchasePartyAuto($post['q']);
+			$json = $this->Base_model->getPartyAuto($post['q']);
 			echo json_encode($json);
 		}
 	}

@@ -2252,22 +2252,22 @@ class Base_Model extends CI_Model
 }
 
 
-public function getPurchasePartyAuto($term='') {
+public function getPartyAuto($term='') {
 
     $output = [];
     $this->db->select('id,name');
     $this->db->from('party_details');
-    $this->db->where('type',2);
+    // $this->db->where('type',2);
     if ($term) {
 
-     $this->db->where("name LIKE '$term%'");
+       $this->db->where("name LIKE '$term%'");
 
- }
- $this->db->limit(10);
- $this->db->order_by('id','ASC');
- $res = $this->db->get();
+   }
+   $this->db->limit(10);
+   $this->db->order_by('id','ASC');
+   $res = $this->db->get();
 
- foreach($res->result_array() as $row) {
+   foreach($res->result_array() as $row) {
     $output[] = ['id'=>$row['id'], 
 
     'text' =>$row['name']  
@@ -2285,14 +2285,14 @@ public function getBarcodeAuto($term='') {
     $this->db->from('products');
     if ($term) {
 
-     $this->db->where("barcode LIKE '$term%'");
+       $this->db->where("barcode LIKE '$term%'");
 
- }
- $this->db->limit(10);
- $this->db->order_by('id','ASC');
- $res = $this->db->get();
+   }
+   $this->db->limit(10);
+   $this->db->order_by('id','ASC');
+   $res = $this->db->get();
 
- foreach($res->result_array() as $row) {
+   foreach($res->result_array() as $row) {
     $output[] = ['id'=>$row['id'], 
 
     'text' =>$row['barcode']  
@@ -2652,6 +2652,20 @@ public function getSaleRate($product_id){
     }
 
     return $sale_rate;
+}
+
+
+function getItemfield($field_name, $user_id){
+
+    $field_value = NULL;
+    $this->db->select($field_name);
+    $this->db->where('user_id', $user_id);
+    $this->db->from('login_info');
+    $query = $this->db->get();
+    foreach ($query->result() as $row) {
+        $field_value = $row->$field_name;
+    }
+    return $field_value;
 }
 
 
