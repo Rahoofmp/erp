@@ -75,12 +75,56 @@
 											</div>
 										</div>
 									</div>
+
+
+									<div class="col-md-6">
+										<div class="form-group row mb-2">
+											<label for="txtName" class="col-lg-3 col-form-label"> Purchase Rate :</label>
+											<div class="col-lg-9">
+												<input type="text" id="purchase_rate"  class="form-control" name ="purchase_rate" value="{$item_details['purchase_rate']}"  required="">
+												{form_error('purchase_rate')}
+											</div>
+										</div>
+									</div>
+									
 									<div class="col-md-6">
 										<div class="form-group row mb-2">
 											<label for="txtName" class="col-lg-3 col-form-label"> Sales Rate :</label>
 											<div class="col-lg-9">
 												<input type="text" id="sales_rate"  class="form-control" name ="sales_rate" value="{$item_details['sales_rate']}"  required="">
 												{form_error('sales_rate')}
+											</div>
+										</div>
+									</div>
+
+									
+
+									<div class="col-md-6">
+										<div class="form-group row mb-2">
+											<label for="txtName" class="col-lg-3 col-form-label">MRP:</label>
+											<div class="col-lg-9">
+												<input type="text" id="mrp"  class="form-control" name ="mrp" value="{$item_details['mrp']}"  required="">
+												{form_error('mrp')}
+											</div>
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-group row mb-2">
+											<label for="txtName" class="col-lg-3 col-form-label">Opeining Stock:</label>
+											<div class="col-lg-9">
+												<input type="number" id="opening_stock"  class="form-control" name ="opening_stock" value="{$item_details['opening_stock']}"  required="">
+												{form_error('opening_stock')}
+											</div>
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-group row mb-2">
+											<label for="txtName" class="col-lg-3 col-form-label">Adding Date:</label>
+											<div class="col-lg-9">
+												<input id="txtDate" name="date" type="date" value="{$party_details['date']}" class="form-control" required>
+												{form_error('datre')}
 											</div>
 										</div>
 									</div>

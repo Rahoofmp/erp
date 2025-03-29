@@ -552,7 +552,10 @@ public function addNewItem($post_arr){
     $this->db->set('type',$post_arr['type']);
     $this->db->set('category',$post_arr['category']);
     $this->db->set('sales_rate',$post_arr['sales_rate']);
-    // $this->db->set('as_date',$post_arr['as_date']);
+    $this->db->set('purchase_rate',$post_arr['purchase_rate']);
+    $this->db->set('opening_stock',$post_arr['opening_stock']);
+    $this->db->set('mrp',$post_arr['mrp']);
+    $this->db->set('date',$post_arr['date']);
     $this->db->set('created_date',$submit_date);
     $this->db->set('status','active');
     $result = $this->db->insert('products');
@@ -595,7 +598,7 @@ public function updateItem($post_arr,$id){
 
 
 public function generateBillNumber($as_date) {
-    
+
     $formatted_date = date('m-d-Y', strtotime($as_date));
     $this->db->select('bill_number');
     $this->db->from('purchase');
@@ -699,6 +702,41 @@ public function getAllPurchaseAjax( $search_arr =[],$count = 0)
     return $details;
 }
 
+
+public function ChageProductField($product) 
+{
+    $date=date('Y-m-d H:i:s');
+
+    $this->db->set('purchase_rate',$product['purchase_rate']);
+    $this->db->set('date_modified',$date);
+    $this->db->set('mrp',$product['mrp']);
+    $this->db->where('id',$product['product_id']);
+    $result=$this->db->update("products");
+    return $result;
+}
+
+public function ChageProductFieldSales($product) 
+{
+    $date=date('Y-m-d H:i:s');
+
+    $this->db->set('sales_rate',$product['sale_rate']);
+    $this->db->set('date_modified',$date);
+    $this->db->where('id',$product['product_id']);
+    $result=$this->db->update("products");
+    print_r($result);
+    die();
+    return $result;
+}
+
+function getTotalProductCount($product_id) {
+    $this->db->select_sum('stock');
+    $this->db->where('product_id', $product_id);
+    $this->db->from('purchase');
+    $query = $this->db->get();
+    
+    $result = $query->row();
+    return $result ? $result->stock : 0;
+}
 
 
 

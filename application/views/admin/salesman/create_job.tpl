@@ -45,7 +45,7 @@
 								<input id="txtDate" name="as_date" type="date" value="{$party_details['as_date']}" class="form-control" required>
 								{form_error('as_date')}
 								
-								{form_error('as_date')}
+							
 							</div>
 						</div>
 					</div>

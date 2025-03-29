@@ -426,8 +426,17 @@ class Settings extends Base_Controller {
 				return;
 			}
 
-			// $purchase_rate=$this->Base_model->getItemfield('purchase_rate',$item_id);
+			$this->Settings_model->ChageProductField($product);
+			
 		}
+
+		print_r($post_arr);
+		die();
+
+		// $job_number = $this->Salesman_model->generateJobNumber($post_arr['as_date']); 
+		// $post_arr['job_number'] = $job_number; 
+
+		////..............FROME HERE  ////
 
 
 		$this->Settings_model->begin();
@@ -532,11 +541,77 @@ public function get_purchase_list_ajax() {
 }
 
 
+function sales($enc_id='')
+{
+
+	$id=False;
+	if ($enc_id) {
+		$id=$this->Base_model->encrypt_decrypt('decrypt',$enc_id);
+		$data['category_details']=$this->Settings_model->getAllCategoryDetails($id);
+
+		$data['enc_id']=$enc_id;
+	}
+
+	if ($this->input->post('sale')) {
+
+		$post_arr = $this->input->post();
+
+
+		foreach ($post_arr['products'] as $index => $product) { 
+
+			$post_arr['products'][$index]['category_id'] = $this->Base_model->categoryIdFromProduct($product['product_id']);
+
+			if (empty($product['product_id']) || 
+				empty($post_arr['products'][$index]['category_id']) || 
+				empty($product['party_id']) || 
+				empty($product['quantity']) || 
+				empty($product['sale_rate']) || 
+				empty($product['tax'])) {
+
+				$this->redirect('Error: All product fields are required!', 'settings/sales', FALSE);
+			return;
+		}
+
+
+		$this->Settings_model->ChageProductFieldSales($product);
+
+	}
+
+
+	$this->Settings_model->begin();
+
+
+	$bill_number = $this->Settings_model->generateBillNumber($post_arr['as_date']); 
+	$post_arr['bill_number'] = $bill_number; 
+
+	$purchase = $this->Settings_model->addPurchaseProducts($post_arr);
+
+
+	if ($purchase) {
+		$this->Settings_model->commit();
+		$this->redirect('Purchase Added Successfully', 'settings/purchase', TRUE);
+	} else {
+		$this->redirect('Error on purchasing', 'settings/purchase', FALSE);
+	}
+}
+
+$data['title'] = 'Purchase';
+$this->loadView($data);
+}
 
 
 
 
 
+public function get_product_stock_ajax() {
+	$product_id = $this->input->post('product_id');
+	$stock = $this->Settings_model->getTotalProductCount($product_id);
+
+	echo json_encode([
+		"status" => "success",
+		"stock" => $stock
+	]);
+}
 
 
 
@@ -685,6 +760,10 @@ public function validate_add_item()
 	$this->form_validation->set_rules('type','Open Balance','trim|required');
 	$this->form_validation->set_rules('category','Category','trim|required');
 	$this->form_validation->set_rules('sales_rate','Sales Rate','trim|required');
+	$this->form_validation->set_rules('purchase_rate','Purchase Rate','trim|required');
+	$this->form_validation->set_rules('mrp','MRP','trim|required');
+	$this->form_validation->set_rules('opening_stock','Sales Rate','trim|required');
+	$this->form_validation->set_rules('date','Adding Date','trim|required');
 
 		// $this->form_validation->set_rules('as_date','Date','trim|required');
 	$result = $this->form_validation->run();
